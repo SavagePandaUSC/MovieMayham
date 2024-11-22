@@ -1,4 +1,5 @@
 import requests
+from concurrent.futures import ThreadPoolExecutor
 
 API_KEY = "2fc9ee028a312888352de489e536da81"  # Replace with your API key
 BASE_URL = "https://api.themoviedb.org/3"
@@ -15,24 +16,49 @@ def get_genres():
         print(f"Error fetching genres: {response.status_code}, {response.text}")
         return {}
 
-def discover_movies_by_genre(genre_id):
-    """Fetches movies by genre ID using the discover endpoint, handling pagination."""
-    movies = []
-    page = 1
-    total_pages = 1  # Initialize to enter the loop
+def fetch_page(genre_id, language, page):
+    """Fetches a single page of results, filtering by genre and language."""
+    url = f"{BASE_URL}/discover/movie"
+    params = {
+        "api_key": API_KEY,
+        "with_genres": genre_id,
+        "with_original_language": language,
+        "page": page,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        return response.json().get("results", [])
+    else:
+        print(f"Error fetching page {page}: {response.status_code}, {response.text}")
+        return []
 
-    while page <= total_pages:
-        url = f"{BASE_URL}/discover/movie"
-        params = {"api_key": API_KEY, "with_genres": genre_id, "page": page}
-        response = requests.get(url, params=params)
-        if response.status_code == 200:
-            data = response.json()
-            movies.extend(data.get("results", []))
-            total_pages = data.get("total_pages", 1)
-            page += 1
-        else:
-            print(f"Error discovering movies: {response.status_code}, {response.text}")
-            break
+def discover_movies_by_genre_and_language(genre_id, language):
+    """Fetches movies by genre ID and language, using parallelized API calls."""
+    # Fetch the first page to determine the total number of pages
+    url = f"{BASE_URL}/discover/movie"
+    params = {
+        "api_key": API_KEY,
+        "with_genres": genre_id,
+        "with_original_language": language,
+        "page": 1,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        print(f"Error fetching movies: {response.status_code}, {response.text}")
+        return []
+
+    data = response.json()
+    total_pages = data.get("total_pages", 1)
+
+    # Use ThreadPoolExecutor to fetch pages in parallel
+    movies = []
+    with ThreadPoolExecutor() as executor:
+        futures = [
+            executor.submit(fetch_page, genre_id, language, page)
+            for page in range(1, total_pages + 1)
+        ]
+        for future in futures:
+            movies.extend(future.result())
 
     return movies
 
@@ -53,15 +79,17 @@ def main():
         print("Invalid genre. Please try again.")
         return
 
-    print(f"Fetching movies in the genre: {genre.capitalize()}...")
-    movies = discover_movies_by_genre(genre_id)
+    language = input("Enter the language code to filter by (e.g., 'en' for English, 'fr' for French): ").strip().lower()
+
+    print(f"Fetching movies in the genre '{genre.capitalize()}' and language '{language}'...")
+    movies = discover_movies_by_genre_and_language(genre_id, language)
 
     if movies:
         print(f"\nMovies found ({len(movies)} total):")
         for movie in movies:
             print(f"Title: {movie['title']}, Release Date: {movie.get('release_date', 'N/A')}")
     else:
-        print("No movies found in this genre.")
+        print("No movies found for this genre and language.")
 
 if __name__ == "__main__":
     main()
