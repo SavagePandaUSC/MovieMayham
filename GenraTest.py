@@ -41,7 +41,6 @@ def discover_movies_by_genre_and_language(genre_id, language):
     }
     response = requests.get(url, params=params)
     if response.status_code != 200:
-        print(f"Error fetching movies: {response.status_code}, {response.text}")
         return []
 
     data = response.json()
@@ -62,7 +61,6 @@ def discover_movies_by_genre_and_language(genre_id, language):
 def main():
     genres = get_genres()
     if not genres:
-        print("Could not retrieve genres. Exiting...")
         return
 
     print("Available genres:")
