@@ -1,7 +1,7 @@
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-API_KEY = "2fc9ee028a312888352de489e536da81"  # Replace with your API key
+API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
 
 def get_genres():
@@ -13,7 +13,6 @@ def get_genres():
         genres = response.json().get("genres", [])
         return {genre["name"].lower(): genre["id"] for genre in genres}
     else:
-        print(f"Error fetching genres: {response.status_code}, {response.text}")
         return {}
 
 def fetch_page(genre_id, language, page):
@@ -29,12 +28,10 @@ def fetch_page(genre_id, language, page):
     if response.status_code == 200:
         return response.json().get("results", [])
     else:
-        print(f"Error fetching page {page}: {response.status_code}, {response.text}")
         return []
 
 def discover_movies_by_genre_and_language(genre_id, language):
-    """Fetches movies by genre ID and language, using parallelized API calls."""
-    # Fetch the first page to determine the total number of pages
+    """Fetches movies by genre ID and language."""
     url = f"{BASE_URL}/discover/movie"
     params = {
         "api_key": API_KEY,
@@ -44,7 +41,6 @@ def discover_movies_by_genre_and_language(genre_id, language):
     }
     response = requests.get(url, params=params)
     if response.status_code != 200:
-        print(f"Error fetching movies: {response.status_code}, {response.text}")
         return []
 
     data = response.json()
@@ -65,7 +61,6 @@ def discover_movies_by_genre_and_language(genre_id, language):
 def main():
     genres = get_genres()
     if not genres:
-        print("Could not retrieve genres. Exiting...")
         return
 
     print("Available genres:")
@@ -85,8 +80,13 @@ def main():
     movies = discover_movies_by_genre_and_language(genre_id, language)
 
     if movies:
-        print(f"\nMovies found ({len(movies)} total):")
-        for movie in movies:
+        # Sort movies by popularity in descending order
+        movies = sorted(movies, key=lambda x: x.get('popularity', 0), reverse=True)
+        # Slice to get the top 20 most popular movies
+        top_movies = movies[:20]
+        
+        print(f"\nTop 20 movies found ({len(top_movies)} total):")
+        for movie in top_movies:
             print(f"Title: {movie['title']}, Release Date: {movie.get('release_date', 'N/A')}")
     else:
         print("No movies found for this genre and language.")
