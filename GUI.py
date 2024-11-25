@@ -120,7 +120,7 @@ def fetchButtonPress():
     yrInput = yrEntry.get()
     genreInput = genreCombo.get()
 
-    print(titleEntry)
+    print(titleInput)
     print(langInput)
     print(dirInput)
     print(yrInput)
