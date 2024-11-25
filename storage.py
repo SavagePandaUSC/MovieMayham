@@ -49,19 +49,20 @@ def correct(movie_title):
     return " ".join(change)  
 
 
-def save(movie_data, movie_title):
-    """saves the relevant movie data to a txt file (passed parameter should be the dictionary for a movie and then its title)"""
+def save(movie_data):
+    """saves the relevant movie data to a txt file (passed parameter should be the dictionary for a movie)
+    (saves in order: title, director, year_released, length, when_watched, rating, genre, id)"""
 
     # create the required file if it doesn't exist
     with open('saved_movies.txt', 'a') as blank:
         pass
 
     # checks to see if movie is already saved
-    with open('saved_movies.txt', 'r') as check:
+    with open('saved_movies.txt', 'r') as file:
 
-        for line in check:
+        for line in file:
             
-            if  movie_title in line or  movie_data.get('release_date', '') in line:
+            if  movie_data['id'] in line:
                 print('This movie is already saved')
                 return None
 
@@ -69,11 +70,21 @@ def save(movie_data, movie_title):
     # appends the file to save movie details
     with open('saved_movies.txt', 'a') as file:
 
-        # write the movies details into the txt file
-        info = ['original_title', 'release_date', 'id']
+        # queries the user for unique information (possibly could be changed a query user function)
+        watch_date = [input('Year you watched it: ')]
+        watch_date += [input('Month you watched it: ')]
+        watch_date += [input('Day of month you watched it: ')]
+        
+        watch_date = '-'.join(watch_date)
 
+        rating = input('From 1-10 what would you rate the movie: ')
+
+
+        info = [movie_data['original_title'], 'TestDirector', movie_data['release_date'], 'TestLength', watch_date, str(rating), 'TestGenre', movie_data['id']]
+
+        # writes the information into the file
         for i in info:
-            file.write(str(movie_data[i]) + ', ')
+            file.write(str(i) + ',')
         
         file.write('\n')
 
@@ -83,7 +94,7 @@ def delete(title):
     # corrects the title so it will match with what is in the directory
     title = correct(title)
 
-    # reads the entirety of the file and saves it
+    # reads the entirety of the file and stores it in a variable
     with open('saved_movies.txt', 'r') as file:
         lines = file.readlines()
     
@@ -97,3 +108,9 @@ def delete(title):
         for line in lines:
             if title not in line:
                 file.write(line)
+
+
+if __name__ == "__main__":
+    
+    pass
+    
