@@ -50,7 +50,6 @@ def discover_movies_by_genre_and_language(genre_id, language):
     data = response.json()
     total_pages = data.get("total_pages", 1)
 
-    # Use ThreadPoolExecutor to fetch pages in parallel
     movies = []
     with ThreadPoolExecutor() as executor:
         futures = [
