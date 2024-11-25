@@ -16,10 +16,15 @@ class Movie:
         self._when_watched = ""
         self._rating = ""  # scale of 1-10, or as preferred
         self._genre = ""
+        self.id = ""
     # Getter and setter for title
     def get_title(self):
         return self._title
 
+    def setId(self, input):
+        self.id = input
+    def getId(self):
+        return self.id
     def set_title(self, title):
         self._title = title
 
