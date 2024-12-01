@@ -1,4 +1,5 @@
 import requests
+import GUI
 
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
@@ -13,9 +14,30 @@ def search_movies(movie_name):
     response = requests.get(url, params=paramiters)
     if response.status_code == 200:
         return response.json()  
-    else:
-        print(f"Error: {response.status_code}, {response.text}")
-        return None
+    
+    
+def search_movie_by_id(movie_id):
+    """"Uses the API to search for a specific movie by using its id"""
+
+    url = f"{BASE_URL}/movie/{movie_id}"
+    paramiters = {'api_key': API_KEY}
+    response = requests.get(url, params=paramiters)
+    return response.json()
+
+
+def get_director_by_id(id):
+    """Return the name of a director for a movie using the movie id"""
+
+    url = f"{BASE_URL}/movie/{id}/credits"
+    paramiters = {'api_key': API_KEY}
+    response = requests.get(url, params=paramiters)
+    
+    if response.status_code == 200:
+        credits = response.json()
+        # Filter crew members to find the director
+        director = [member['name'] for member in credits['crew'] if member['job'] == 'Director']
+        return director[0]
+ 
 
 
 def correct(movie_title):
@@ -46,12 +68,16 @@ def correct(movie_title):
 
 
     # reconnecting movie title
-    return " ".join(change)  
+    return " ".join(change)
 
 
-def save(movie_data):
-    """saves the relevant movie data to a txt file (passed parameter should be the dictionary for a movie)
+def save_movie(id):
+    """saves the relevant movie data to a txt file (passed parameter should be the id for a movie)
     (saves in order: title, director, year_released, length, when_watched, rating, genre, id)"""
+
+    #recieves the data and director of a movie using its id
+    movie_data = search_movie_by_id(id)
+    director = get_director_by_id(id)
 
     # create the required file if it doesn't exist
     with open('saved_movies.txt', 'a') as blank:
@@ -65,8 +91,7 @@ def save(movie_data):
             if  movie_data['id'] in line:
                 print('This movie is already saved')
                 return None
-
-    
+            
     # appends the file to save movie details
     with open('saved_movies.txt', 'a') as file:
 
@@ -77,16 +102,17 @@ def save(movie_data):
         
         watch_date = '-'.join(watch_date)
 
-        rating = input('From 1-10 what would you rate the movie: ')
+        rating = rate()
 
 
-        info = [movie_data['original_title'], 'TestDirector', movie_data['release_date'], 'TestLength', watch_date, str(rating), 'TestGenre', movie_data['id']]
+        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, str(rating), movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
         for i in info:
             file.write(str(i) + ',')
         
         file.write('\n')
+
 
 def delete(title):
     """deletes a given movie"""
@@ -109,8 +135,21 @@ def delete(title):
             if title not in line:
                 file.write(line)
 
+def rate():
+    """This function returns a rating between 1 and 10"""
+
+    score = input('Please rate the movie on a scale of 1-10: ')
+
+    if score < 1 or score > 10:
+        print('Your scoring must be between 1 and 10')
+        score = rate()
+    
+    return score
+
+    
+
 
 if __name__ == "__main__":
     
-    pass
+    save_movie(550)
     
