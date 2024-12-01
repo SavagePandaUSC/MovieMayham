@@ -75,6 +75,8 @@ genre_names = list(genres.keys())
 language_var = tk.StringVar(value="en")
 genre_var = tk.StringVar(value="Select Genre")
 custom_movie_list = []  # List to store user-selected movies
+current_page = 0        # Tracks the current page for pagination
+paginated_movies = []   # Stores paginated movie data
 
 # Dropdown for genres
 genre_combo = ttk.Combobox(window, values=genre_names, textvariable=genre_var)
@@ -99,6 +101,7 @@ custom_list_box.pack(pady=10)
 
 # Fetch movies function
 def fetch_movies():
+    global current_page, paginated_movies
     selected_genre = genre_var.get()
     language = language_var.get().strip()
 
@@ -114,16 +117,44 @@ def fetch_movies():
     movies = discover_movies_by_genre_and_language(genre_id, language)
 
     if movies:
-        # Sort movies by popularity in descending order and display the top 20
-        movies = sorted(movies, key=lambda x: x.get('popularity', 0), reverse=True)[:20]
-        results_box.delete(0, tk.END)
-        for movie in movies:
-            title = movie.get("title", "Unknown Title")
-            release_date = movie.get("release_date", "N/A")
-            results_box.insert(tk.END, f"{title} (Release Date: {release_date})")
+        # Sort movies by popularity in descending order
+        movies = sorted(movies, key=lambda x: x.get('popularity', 0), reverse=True)
+        
+        # Paginate movies into chunks of 20
+        paginated_movies = [movies[i:i + 10] for i in range(0, len(movies), 10)]
+        current_page = 0
+        display_page()
     else:
         results_box.delete(0, tk.END)
         results_box.insert(tk.END, "No movies found for the selected criteria.")
+
+# Function to display the current page
+def display_page():
+    global current_page
+    results_box.delete(0, tk.END)
+    if not paginated_movies:
+        results_box.insert(tk.END, "No movies to display.")
+        return
+
+    movies_on_page = paginated_movies[current_page]
+    for movie in movies_on_page:
+        title = movie.get("title", "Unknown Title")
+        release_date = movie.get("release_date", "N/A")
+        results_box.insert(tk.END, f"{title} (Release Date: {release_date})")
+
+# Navigate to the next page
+def next_page():
+    global current_page
+    if paginated_movies and current_page < len(paginated_movies) - 1:
+        current_page += 1
+        display_page()
+
+# Navigate to the previous page
+def previous_page():
+    global current_page
+    if paginated_movies and current_page > 0:
+        current_page -= 1
+        display_page()
 
 # Add movie to custom list
 def add_to_custom_list():
@@ -143,6 +174,12 @@ def remove_from_custom_list():
 fetch_button = ttk.Button(window, text="Fetch Movies", command=fetch_movies)
 fetch_button.pack(pady=5)
 
+prev_button = ttk.Button(window, text="Previous Page", command=previous_page)
+prev_button.pack(pady=5)
+
+next_button = ttk.Button(window, text="Next Page", command=next_page)
+next_button.pack(pady=5)
+
 add_button = ttk.Button(window, text="Add to List", command=add_to_custom_list)
 add_button.pack(pady=5)
 
@@ -151,4 +188,5 @@ remove_button.pack(pady=5)
 
 # Start the GUI loop
 window.mainloop()
+
 
