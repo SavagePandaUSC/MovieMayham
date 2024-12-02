@@ -20,6 +20,10 @@ window.geometry("600x300")
 font1 = font.Font(family="Constantia", size=16)
 font2 = font.Font(family="Constantia", size=14, slant="italic")
 
+#frame0: show/movie selection
+frame0 = tk.Frame(window)
+frame0.pack()
+
 #frame1: selection frame
 frame1 = tk.Frame(window)
 frame1.pack()
@@ -180,7 +184,7 @@ for item in items:
     listbox.insert(tk.END, item)
 
 def missing_input():
-    titleInput = correct(titleEntry.get())
+    titleInput = titleEntry.get()
     langInput = langCombo.get()
     countryInput = countryCombo.get()
     dirInput = dirEntry.get()
