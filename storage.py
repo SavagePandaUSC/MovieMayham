@@ -152,4 +152,7 @@ def rate():
 if __name__ == "__main__":
     
     save_movie(550)
+
+    data = search_movies('Fight Club')
+    print(data)
     

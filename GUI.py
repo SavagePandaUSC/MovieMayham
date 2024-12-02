@@ -180,7 +180,7 @@ for item in items:
     listbox.insert(tk.END, item)
 
 def missing_input():
-    titleInput = correct(titleEntry.get())
+    titleInput = titleEntry.get()
     langInput = langCombo.get()
     countryInput = countryCombo.get()
     dirInput = dirEntry.get()
