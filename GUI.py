@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font
 from tkinter import messagebox
+from storage import *
 
 """still to add:
 add series as well
@@ -179,7 +180,7 @@ for item in items:
     listbox.insert(tk.END, item)
 
 def missing_input():
-    titleInput = titleEntry.get()
+    titleInput = correct(titleEntry.get())
     langInput = langCombo.get()
     countryInput = countryCombo.get()
     dirInput = dirEntry.get()
