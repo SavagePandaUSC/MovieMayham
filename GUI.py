@@ -2,14 +2,18 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font
 from tkinter import messagebox
-from storage import *
+from storage import search_movies
 
 """still to add:
-add series as well
+tv shows
 lang, rating, country (drop down)
 api result list: show scroll wheel and "next"
 parental warning when a movie is rated 18+
 "show watchlist" button
+note: some filters (eg genres) will be different between shows and movies
+FOR TONIGHT:
+ability to search for a movie, have at least 2 or 3 filters, be able to save the movie
+preferably: remove a movie
 """
 
 window = tk.Tk()
@@ -75,10 +79,10 @@ genreLabel.grid(row=5,column=0)
 titleEntry = tk.Entry(frame2)
 titleEntry.grid(row=0,column=1)
 lang_vals = ["placeholder"]
-langCombo = ttk.Combobox(frame2, values=lang_vals)
+langCombo = ttk.Combobox(frame2, state="readonly", values=lang_vals)
 langCombo.grid(row=1,column=1)
 country_vals = ["placeholder"]
-countryCombo = ttk.Combobox(frame2, values=country_vals)
+countryCombo = ttk.Combobox(frame2, state="readonly", values=country_vals)
 countryCombo.grid(row=2,column=1)
 dirEntry = tk.Entry(frame2)
 dirEntry.grid(row=3,column=1)
@@ -86,7 +90,7 @@ yrEntry = tk.Entry(frame2)
 yrEntry.grid(row=4,column=1)
 genre_vals = ["Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", 
 "History", "Horror", "Music", "Mystery", "Romance", "Science fiction", "Tv movie", "Thriller", "War", "Western"]
-genreCombo = ttk.Combobox(frame2, values=genre_vals)
+genreCombo = ttk.Combobox(frame2, state="readonly", values=genre_vals)
 genreCombo.grid(row=5,column=1)
 #frame2a: fetch and clear buttons
 frame2a = tk.Frame(frame2)
@@ -162,15 +166,29 @@ def clearButtonPress():
 clearButton.configure(command=clearButtonPress)
 
 ##fetching
-#items will be the (1st) list of 20 results from the API. if there are multiple pages, the "next" button will cycle through them
-items = ["test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test",]
+# items will be the (1st) list of 20 results from the API. if there are multiple pages, the "next" button will 
+# cycle through them
+items = ["test","test","test","test","test","test","test","test","test",
+"test","test","test","test","test","test","test","test","test","test","test",]
 
 listFrame = tk.Frame(window)
 listFrame.pack()
 listFrame.pack_forget()
 
+#filter frame
+filterFrame = tk.Frame(listFrame)
+filterFrame.pack(side=tk.LEFT)
+
+sortLabel = tk.Label(filterFrame, text="Sort by:")
+sortLabel.pack()
+applyFiltersButton = tk.Button(filterFrame, text="Apply filters")
+applyFiltersButton.pack()
+clearFiltersButton = tk.Button(filterFrame, text="Clear filters")
+clearFiltersButton.pack()
+
+#scroll frame
 scrollFrame = tk.Frame(listFrame)
-scrollFrame.pack()
+scrollFrame.pack(side=tk.RIGHT)
 
 listbox = tk.Listbox(scrollFrame, selectmode=tk.MULTIPLE)
 listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -182,6 +200,22 @@ listbox.config(yscrollcommand=scrollbar.set)
 
 for item in items:
     listbox.insert(tk.END, item)
+
+##next and prev buttons
+nextButton = tk.Button(listFrame, text="Next")
+nextButton.pack(side=tk.RIGHT)
+prevButton = tk.Button(listFrame, text="Prev")
+prevButton.pack(side=tk.RIGHT)
+
+#####
+
+#define input variables
+titleInput = titleEntry.get()
+langInput = langCombo.get()
+countryInput = countryCombo.get()
+dirInput = dirEntry.get()
+yrInput = yrEntry.get()
+genreInput = genreCombo.get()
 
 def missing_input():
     titleInput = titleEntry.get()
@@ -207,9 +241,11 @@ def fetchButtonPress():
     if missing_input():
         msg=messagebox.showinfo("Error", "Missing input.")
     else:
-        frame1.pack_forget()
-        frame2.pack_forget()
-        listFrame.pack()
+        #frame1.pack_forget()
+        #frame2.pack_forget()
+        #listFrame.pack()
+        movieTitleResult = search_movies(titleInput)
+        print(movieTitleResult)
 
 fetchButton.configure(command=fetchButtonPress)
 
