@@ -113,6 +113,8 @@ def save_movie(id):
         
         file.write('\n')
 
+def save_show(id):
+    pass
 
 def delete(title):
     """deletes a given movie"""
@@ -138,21 +140,19 @@ def delete(title):
 def rate():
     """This function returns a rating between 1 and 10"""
 
-    score = input('Please rate the movie on a scale of 1-10: ')
+    score = int(input('Please rate the movie on a scale of 1-10: '))
 
     if score < 1 or score > 10:
         print('Your scoring must be between 1 and 10')
         score = rate()
     
-    return score
+    return str(score)
 
     
 
 
 if __name__ == "__main__":
-    
-    save_movie(550)
 
     data = search_movies('Fight Club')
-    print(data)
+    print(search_movie_by_id(550))
     
