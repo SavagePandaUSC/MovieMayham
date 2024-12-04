@@ -151,8 +151,4 @@ def rate():
     return str(score)
 
 
-if __name__ == "__main__":
-
-    data = search_movies('Fight Club')
-    print(search_movies("batman"))
     
