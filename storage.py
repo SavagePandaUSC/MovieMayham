@@ -24,6 +24,12 @@ def search_movie_by_id(movie_id):
     return response.json()
 
 
+def get_id(data):
+    """Recieves the data for a selected film and returns its id"""
+
+    return data['id']
+
+
 def get_director_by_id(id):
     """Return the name of a director for a movie using the movie id"""
 
