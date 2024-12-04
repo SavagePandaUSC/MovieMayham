@@ -1,5 +1,4 @@
 import requests
-import GUI
 
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
@@ -105,7 +104,7 @@ def save_movie(id):
         rating = rate()
 
 
-        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, str(rating), movie_data['genres'][0].get('name'), movie_data['id']]
+        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], 'watch_date', 'str(rating)', movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
         for i in info:
@@ -113,8 +112,10 @@ def save_movie(id):
         
         file.write('\n')
 
+
 def save_show(id):
     pass
+
 
 def delete(title):
     """deletes a given movie"""
@@ -137,6 +138,7 @@ def delete(title):
             if title not in line:
                 file.write(line)
 
+
 def rate():
     """This function returns a rating between 1 and 10"""
 
@@ -148,11 +150,9 @@ def rate():
     
     return str(score)
 
-    
-
 
 if __name__ == "__main__":
 
     data = search_movies('Fight Club')
-    print(search_movie_by_id(550))
+    print(search_movies("batman"))
     
