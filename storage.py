@@ -101,13 +101,13 @@ def save_movie(id):
     with open('saved_movies.txt', 'a') as file:
 
         # queries the user for unique information (possibly could be changed a query user function)
-        watch_date = [input('Year you watched it: ')]
-        watch_date += [input('Month you watched it: ')]
-        watch_date += [input('Day of month you watched it: ')]
+        ### watch_date = [input('Year you watched it: ')]
+        ### watch_date += [input('Month you watched it: ')]
+        ### watch_date += [input('Day of month you watched it: ')]
         
-        watch_date = '-'.join(watch_date)
+        ### watch_date = '-'.join(watch_date)
 
-        rating = rate()
+        ### rating = rate()
 
 
         info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], 'watch_date', 'str(rating)', movie_data['genres'][0].get('name'), movie_data['id']]
@@ -157,4 +157,5 @@ def rate():
     return str(score)
 
 
-    
+if __name__ == "__main__":
+    pass

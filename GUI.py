@@ -309,3 +309,8 @@ fetchButton.configure(command=fetchButtonPress)
 add, remove, and show list buttons"""
         
 window.mainloop()
+
+def isAdult(data):
+    """returns True or False on whether a movie is adult or not. It accepts the dictionary of movie data"""
+    
+    return data['adult']
