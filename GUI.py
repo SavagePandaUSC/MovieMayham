@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font
 from tkinter import messagebox
-from storage import search_movies, search_movie_by_id, get_director_by_id, correct, save_movie, delete
+from storage import search_movies, search_movie_by_id, get_director_by_id, correct, save_movie, delete, get_id
 import requests
 
 """still to add:
@@ -18,6 +18,8 @@ preferably: remove a movie also
 NOTES - fix for final vers.:
     title will be selected by default for now
     no director filter yet
+    no add/remove
+    no filters
 """
 
 window = tk.Tk()
@@ -151,24 +153,6 @@ def enterButtonPress():
 
 enterButton.configure(command=enterButtonPress)
 
-def clearButtonPress():
-    #titleCheckVar.set(0)
-    langCheckVar.set(0) 
-    #countryCheckVar.set(0)
-    #dirCheckVar.set(0)
-    yrCheckVar.set(0)
-    genreCheckVar.set(0)
-    make_frame2_invisible()
-    enterButton.pack()
-    #titleCheckBox.config(state=tk.NORMAL)
-    langCheckBox.config(state=tk.NORMAL)
-    #countryCheckBox.config(state=tk.NORMAL)
-    #dirCheckBox.config(state=tk.NORMAL)
-    yrCheckBox.config(state=tk.NORMAL)
-    genreCheckBox.config(state=tk.NORMAL)
-
-clearButton.configure(command=clearButtonPress)
-
 ##fetching
 
 listFrame = tk.Frame(window)
@@ -179,12 +163,10 @@ listFrame.pack_forget()
 filterFrame = tk.Frame(listFrame)
 filterFrame.pack(side=tk.LEFT)
 
-sortLabel = tk.Label(filterFrame, text="Sort by:")
-sortLabel.pack()
-applyFiltersButton = tk.Button(filterFrame, text="Apply filters")
-applyFiltersButton.pack()
-clearFiltersButton = tk.Button(filterFrame, text="Clear filters")
-clearFiltersButton.pack()
+addButton = tk.Button(filterFrame, text="ADD")
+#addButton.pack()
+removeButton = tk.Button(filterFrame, text="REMOVE")
+#removeButton.pack()
 
 #scroll frame
 scrollFrame = tk.Frame(listFrame)
@@ -201,14 +183,40 @@ listbox.config(yscrollcommand=scrollbar.set)
 def clear_listbox():
     listbox.delete(0,tk.END)
 
+###########################################################################
+
+def clearButtonPress():
+    #titleCheckVar.set(0)
+    langCheckVar.set(0) 
+    #countryCheckVar.set(0)
+    #dirCheckVar.set(0)
+    yrCheckVar.set(0)
+    genreCheckVar.set(0)
+    make_frame2_invisible()
+    enterButton.pack()
+    #titleCheckBox.config(state=tk.NORMAL)
+    langCheckBox.config(state=tk.NORMAL)
+    #countryCheckBox.config(state=tk.NORMAL)
+    #dirCheckBox.config(state=tk.NORMAL)
+    yrCheckBox.config(state=tk.NORMAL)
+    genreCheckBox.config(state=tk.NORMAL)
+    listFrame.pack_forget()
+
+    titleEntry.delete(0, tk.END)
+    #langCombo.set("")
+    #countryCombo.set("")
+    #dirEntry.delete(0, tk.END)
+    yrEntry.delete(0, tk.END)
+    genreCombo.set("")
+
+clearButton.configure(command=clearButtonPress)
+
 """to add later:
 ##next and prev buttons
 nextButton = tk.Button(listFrame, text="Next")
 nextButton.pack(side=tk.RIGHT)
 prevButton = tk.Button(listFrame, text="Prev")
 prevButton.pack(side=tk.RIGHT)"""
-
-#####
 
 # define input variables(:
 titleInput = titleEntry.get()
@@ -242,6 +250,7 @@ def missing_input():
         return False
 
 def fetchButtonPress():
+    clear_listbox()
     # define input variables(:
     titleInput = titleEntry.get()
     langInput = langCombo.get()
@@ -255,10 +264,18 @@ def fetchButtonPress():
         listFrame.pack()
         resultsDic = search_movies(titleInput)
         for k in resultsDic['results']:
+            year_str = ""
+            title_str = ""
             for k2 in k:
+                if k2 == "release_date":
+                    year_str = k[k2][:4]
                 if k2 == 'title':
-                    listbox.insert(tk.END, k[k2])
+                    title_str = k[k2]
+            listbox.insert(tk.END, title_str + " : " + year_str)
 
 fetchButton.configure(command=fetchButtonPress)
 
+"""def addButtonPress():
+    for i in listbox.curselection():"""
+        
 window.mainloop()
