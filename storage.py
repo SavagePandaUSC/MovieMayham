@@ -152,6 +152,6 @@ def rate():
 
 if __name__ == "__main__":
 
-    data = search_movies('Fight Club')
-    print(search_movie_by_id(550))
+    print(search_movies('Batman'))
+    #print(search_movie_by_id(550))
     
