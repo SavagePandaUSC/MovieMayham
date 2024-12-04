@@ -1,5 +1,4 @@
 import requests
-import GUI
 
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
