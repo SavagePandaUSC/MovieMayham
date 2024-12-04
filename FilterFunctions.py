@@ -76,7 +76,8 @@ def search_movies(movie_name):
     paramiters = {"api_key": API_KEY, "query": movie_name}
     response = requests.get(url, params=paramiters)
     if response.status_code == 200:
-        return response.json()  
+        return response.json()
+
 
 if __name__ == "__main__":
     movies = search_movies("Batman")
