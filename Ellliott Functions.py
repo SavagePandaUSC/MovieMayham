@@ -12,11 +12,6 @@ def get_genres(is_tv):
     response = requests.get(url, params=params)
     genres = response.json().get("genres", [])
     return {genre["name"]: genre["id"] for genre in genres}
-def genra_filter(search_results, selected_genre):
-    return [
-        movie for movie in search_results['results']
-        if any(genre['name'].lower() == selected_genre.lower() for genre in movie['genres'])
-    ]
 
 def genre_filter(content, selected_genre):
     GENRE_MAP = {
@@ -58,9 +53,21 @@ def genre_filter(content, selected_genre):
         genres = [GENRE_MAP.get(genre_id, "Unknown") for genre_id in item.get('genre_ids', [])]
         if selected_genre.capitalize() in genres:
             filtered_content.append(item)
-    return filtered_content
+    if filtered_content == []:
+        return "No movies found"
+    else:
+        return filtered_content
 
-
+def language_filter(content, selected_language):
+    """Filter by langauge"""
+    filtered_content = []
+    for item in content.get('results', []):
+        if item.get('original_language', '').lower() == selected_language.lower():
+            filtered_content.append(item)
+    if filtered_content == []:
+        return "No movies found"
+    else:
+        return filtered_content
 
 def search_movies(movie_name):
     """Uses the API and finds a movies based on a given name and returns all of its relevant information"""
@@ -70,9 +77,10 @@ def search_movies(movie_name):
     response = requests.get(url, params=paramiters)
     if response.status_code == 200:
         return response.json()  
+
 if __name__ == "__main__":
     movies = search_movies("Batman")
-    filtered_movies = genre_filter(movies, "Crime")
+    filtered_movies = language_filter(movies, "en")
     print(filtered_movies)
 
 
