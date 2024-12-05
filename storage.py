@@ -1,6 +1,7 @@
 import requests
 import tkinter as tk
 from tkinter import ttk, messagebox
+from FilterFunctions import genre_filter
 
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
@@ -13,9 +14,15 @@ def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     url = f"{BASE_URL}/search/movie"
     paramiters = {"api_key": API_KEY, "query": movie_name, "with_genres": genre, "primary_release_year": year, "language": language, "page": page}
     response = requests.get(url, params=paramiters)
-    print(type(response))
-    if response.status_code == 200:
-        return response.json()  
+    if(genre != None):
+       response= genre_filter(response.json(), "animation")
+       return response.json()
+    else:
+        print(type(response))
+        return response.json()
+        
+    #if response.status_code == 200:
+    
     
     
 def search_movie_by_id(movie_id):
@@ -183,10 +190,10 @@ def watchDate(year, month, day):
 if __name__ == "__main__":
    
    data = search_movies(
-    "a",       # Movie title to search for
-    16,                 # Genre ID for "Action" (from genre_map)
+    "Batman",       # Movie title to search for
+    "Animation",                 # Genre ID for "Action" (from genre_map)
     2022,            # Release year
     "en",                # Language code for English
     1                    # First page of results
  )
-   #print(data)
+   print(data)

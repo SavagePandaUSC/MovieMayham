@@ -154,7 +154,7 @@ def fetch_movies(page=1):
     results = search_movies(title, genre, year, language, page)
 
     print("Results fetched:", results)  # a simple terminal test
-
+    
     current_results = results.get("results", [])
     current_page = page
     total_pages = results.get("total_pages", 1)

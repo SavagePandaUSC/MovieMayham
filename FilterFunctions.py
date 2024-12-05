@@ -82,6 +82,6 @@ def search_movies(movie_name):
 if __name__ == "__main__":
     movies = search_movies("Batman")
     filtered_movies = language_filter(movies, "en")
-    print(filtered_movies)
+    print((filtered_movies[0]))
 
 
