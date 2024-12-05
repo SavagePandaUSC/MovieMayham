@@ -76,7 +76,7 @@ def correct(movie_title):
     return " ".join(change)
 
 
-def save_movie(id):
+def save_movie(id, rating, watch_date):
     """saves the relevant movie data to a txt file (passed parameter should be the id for a movie)
     (saves in order: title, director, year_released, length, when_watched, rating, genre, id)"""
 
@@ -110,7 +110,7 @@ def save_movie(id):
         ### rating = rate()
 
 
-        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], 'watch_date', 'str(rating)', movie_data['genres'][0].get('name'), movie_data['id']]
+        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
         for i in info:
@@ -145,16 +145,34 @@ def delete(title):
                 file.write(line)
 
 
-def rate():
-    """This function returns a rating between 1 and 10"""
+def rateCheck(integer):
+    """This function takes an inputed rating checks if its acceotable and returns it in string format"""
 
-    score = int(input('Please rate the movie on a scale of 1-10: '))
-
-    if score < 1 or score > 10:
+    if integer < 1 or integer > 10:
         print('Your scoring must be between 1 and 10')
-        score = rate()
+        rateCheck(integer)
     
-    return str(score)
+    return str(integer)
+
+
+def watchDate(year, month, day):
+    """formats a watch date after recieving a year, month, day. (They should be in int form)"""
+
+    if year < 1900 or year > 2024 or year.isDecimal():
+        print("Unacceptable date!") 
+        return None
+    elif month < 1 or month > 12 or month.isDecimal():
+        print("Unacceptable date!") 
+        return None
+    elif day < 1 or day > 31 or day.isDecimal():
+        print("Unacceptable date!") 
+        return None
+
+
+    date = [year, month, day]
+
+
+    return '-'.join(date)
 
 
 if __name__ == "__main__":
