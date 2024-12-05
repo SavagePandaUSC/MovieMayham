@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import requests
+from storage import search_movies, search_movie_by_id, get_director_by_id, correct, save_movie, delete, get_id
 
 API_KEY = "your_api_key"
 BASE_URL = "https://api.themoviedb.org/3"
@@ -15,23 +16,6 @@ current_results = []
 current_page = 1
 total_pages = 1
 watchlist = []
-
-# Utility function: Search movies with filters
-def search_movies(title, genre=None, language=None, year=None, page=1):
-    url = f"{BASE_URL}/search/movie"
-    params = {
-        "api_key": API_KEY,
-        "query": title,
-        "with_genres": genre,
-        "primary_release_year": year,
-        "language": language,
-        "page": page,
-    }
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return {"results": [], "total_pages": 1}
 
 # Frame 1: Filter options
 frame1 = tk.Frame(window)
@@ -137,9 +121,9 @@ def fetch_movies(page=1):
 
     if not title:
         messagebox.showerror("Error", "Please enter a title.")
-        return
+        return None
 
-    results = search_movies(title, genre, language, year, page)
+    results = search_movies(title, genre, year, language, page)
     
     # Debugging API response
     print("Results fetched:", results)  # Log full response for debugging
@@ -150,7 +134,7 @@ def fetch_movies(page=1):
 
     if not current_results:
         messagebox.showinfo("No Results", "No movies found. Try different filters.")
-        return
+        return None
 
     update_results_listbox(current_results)
 
@@ -188,3 +172,6 @@ remove_button.configure(command=remove_from_watchlist)
 
 # Run the main loop
 window.mainloop()
+
+if __name__ == "__main__":
+  pass

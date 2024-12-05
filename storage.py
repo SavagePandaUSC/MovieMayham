@@ -3,13 +3,13 @@ import requests
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
 
-def search_movies(movie_name):
+def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     """Uses the API and finds a movies based on a given name and returns all of its relevant information"""
 
     movie_name = correct(movie_name)
 
     url = f"{BASE_URL}/search/movie"
-    paramiters = {"api_key": API_KEY, "query": movie_name}
+    paramiters = {"api_key": API_KEY, "query": movie_name, "with_genres": genre, "primary_release_year": year, "language": language, "page": page}
     response = requests.get(url, params=paramiters)
     if response.status_code == 200:
         return response.json()  
@@ -176,4 +176,11 @@ def watchDate(year, month, day):
 
 
 if __name__ == "__main__":
-    pass
+    data = search_movies(
+    "The Matrix",       # Movie title to search for
+    28,                 # Genre ID for "Action" (from genre_map)
+    1999,            # Release year
+    "en",                # Language code for English
+    1                    # First page of results
+)
+    print(data)
