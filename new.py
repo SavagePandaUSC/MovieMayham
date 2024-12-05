@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-import requests
 from storage import search_movies, search_movie_by_id, get_director_by_id, correct, save_movie, delete, get_id
-
-API_KEY = "your_api_key"
-BASE_URL = "https://api.themoviedb.org/3"
 
 # Initialize window
 window = tk.Tk()
