@@ -13,6 +13,7 @@ def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     url = f"{BASE_URL}/search/movie"
     paramiters = {"api_key": API_KEY, "query": movie_name, "with_genres": genre, "primary_release_year": year, "language": language, "page": page}
     response = requests.get(url, params=paramiters)
+    print(type(response))
     if response.status_code == 200:
         return response.json()  
     
@@ -181,11 +182,11 @@ def watchDate(year, month, day):
 
 if __name__ == "__main__":
    
-   """ data = search_movies(
-    "The Matrix",       # Movie title to search for
-    28,                 # Genre ID for "Action" (from genre_map)
-    1999,            # Release year
+   data = search_movies(
+    "a",       # Movie title to search for
+    16,                 # Genre ID for "Action" (from genre_map)
+    2022,            # Release year
     "en",                # Language code for English
     1                    # First page of results
  )
-    print(data)"""
+   #print(data)

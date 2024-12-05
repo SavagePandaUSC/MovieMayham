@@ -21,11 +21,33 @@ filter_label = tk.Label(frame1, text="Filter by:")
 filter_label.pack(side=tk.LEFT, padx=5)
 
 genre_vals = [
-    "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary",
+    "", "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary",
     "Drama", "Family", "Fantasy", "History", "Horror", "Music", "Mystery",
     "Romance", "Science Fiction", "TV Movie", "Thriller", "War", "Western"
 ]
-genre_map = {v: i for i, v in enumerate(genre_vals, start=1)}
+
+genre_map = {
+    "": None,
+    "Action": 28,
+    "Adventure": 12,
+    "Animation": 16,
+    "Comedy": 35,
+    "Crime": 80,
+    "Documentary": 99,
+    "Drama": 18,
+    "Family": 10751,
+    "Fantasy": 14,
+    "History": 36,
+    "Horror": 27,
+    "Music": 10402,
+    "Mystery": 9648,
+    "Romance": 10749,
+    "Science Fiction": 878,
+    "TV Movie": 10770,
+    "Thriller": 53,
+    "War": 10752,
+    "Western": 37
+}
 
 # Widgets for filters
 title_var = tk.StringVar()
@@ -116,6 +138,7 @@ def update_results_listbox(movies):
 
         results_listbox.insert(tk.END, display_text)
 
+
 def fetch_movies(page=1):
     global current_results, current_page, total_pages
 
@@ -130,7 +153,7 @@ def fetch_movies(page=1):
 
     results = search_movies(title, genre, year, language, page)
 
-    print("Results fetched:", results)  
+    print("Results fetched:", results)  # a simple terminal test
 
     current_results = results.get("results", [])
     current_page = page
@@ -145,31 +168,38 @@ def fetch_movies(page=1):
 
 
 def next_page():
+    """Increases the page variable by 1 and then calls to change the page forward"""
     if current_page < total_pages:
         fetch_movies(current_page + 1)
 
+
 def previous_page():
+    """Decreases the page variable by 1 and then call to change the page backward"""
     if current_page > 1:
         fetch_movies(current_page - 1)
 
+
 def add_to_list():
-    selected_indices = results_listbox.curselection()
-    for idx in selected_indices:
-        movie = current_results[idx]
+    selected_index = results_listbox.curselection()
+    for index in selected_index:
+        movie = current_results[index]
         if movie not in list:
             list.append(movie)
             list_listbox.insert(tk.END, movie.get("title", "Unknown"))
     messagebox.showinfo("Success", "Selected movies added to list.")
 
+
 def remove_from_list():
-    selected_indices = list_listbox.curselection()
-    for idx in selected_indices[::-1]:  # Remove in reverse to avoid index issues
-        list.pop(idx)
-        list_listbox.delete(idx)
+    selected_index = list_listbox.curselection()
+    for index in selected_index[::-1]:  # Remove in reverse to avoid index issues
+        list.pop(index)
+        list_listbox.delete(index)
     messagebox.showinfo("Success", "Selected movies removed from list.")
+
 
 def update_page_repr():
     pg_rep.config(text=f"Page {current_page} of {total_pages}")
+
 
 # Button configurations
 fetch_button.configure(command=lambda: fetch_movies(1))
