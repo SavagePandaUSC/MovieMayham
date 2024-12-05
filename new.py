@@ -1,19 +1,19 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from storage import search_movies, search_movie_by_id, get_director_by_id, correct, save_movie, delete, get_id
+from storage import search_movies, save_movie, delete, get_id
 
-# Initialize window
+# Create window
 window = tk.Tk()
 window.title("Movie Organizer")
-window.geometry("1000x600")
+window.geometry("1200x800")
 
-# Data to manage watchlist and API pagination
+# Data to manage list and pages
 current_results = []
 current_page = 1
 total_pages = 1
-watchlist = []
+list = []
 
-# Frame 1: Filter options
+## Frame 1: Filter options
 frame1 = tk.Frame(window)
 frame1.pack(pady=10)
 
@@ -47,7 +47,7 @@ year_entry.pack(side=tk.LEFT, padx=5)
 fetch_button = ttk.Button(frame1, text="Fetch")
 fetch_button.pack(side=tk.LEFT, padx=5)
 
-# Frame 2: Results and Watchlist Display
+## Frame 2: Results and list Display
 frame2 = tk.Frame(window)
 frame2.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -62,36 +62,45 @@ results_scrollbar = ttk.Scrollbar(results_frame, orient=tk.VERTICAL, command=res
 results_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 results_listbox.config(yscrollcommand=results_scrollbar.set)
 
-# Box 2: Saved Watchlist
-watchlist_frame = tk.LabelFrame(frame2, text="Saved Watchlist", padx=10, pady=10)
-watchlist_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5)
+# Box 2: Saved list
+list_frame = tk.LabelFrame(frame2, text="Saved list", padx=10, pady=10)
+list_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5)
 
-watchlist_listbox = tk.Listbox(watchlist_frame, height=20, width=50)
-watchlist_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+list_listbox = tk.Listbox(list_frame, height=20, width=50)
+list_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-watchlist_scrollbar = ttk.Scrollbar(watchlist_frame, orient=tk.VERTICAL, command=watchlist_listbox.yview)
-watchlist_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-watchlist_listbox.config(yscrollcommand=watchlist_scrollbar.set)
+list_scrollbar = ttk.Scrollbar(list_frame, orient=tk.VERTICAL, command=list_listbox.yview)
+list_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+list_listbox.config(yscrollcommand=list_scrollbar.set)
 
-# Frame 3: Buttons for Actions
+## Frame 3: Buttons for Actions
 frame3 = tk.Frame(window)
 frame3.pack(pady=10)
 
-add_button = ttk.Button(frame3, text="Add to Watchlist")
+add_button = ttk.Button(frame3, text="Add to list")
 add_button.pack(side=tk.LEFT, padx=5)
 
-remove_button = ttk.Button(frame3, text="Remove from Watchlist")
+remove_button = ttk.Button(frame3, text="Remove from list")
 remove_button.pack(side=tk.LEFT, padx=5)
 
-# Frame 4: Pagination
+save_button = ttk.Button(frame3, text="Save to Watched")
+save_button.pack(side=tk.LEFT, padx=5)
+
+## Frame 4: Page Control
 frame4 = tk.Frame(window)
 frame4.pack(pady=10)
 
+# page number tracker
+pg_rep = tk.Label(frame4, text=f"Page {current_page} of {total_pages}")
+pg_rep.pack(side=tk.LEFT, padx=10)
+
+# page changing buttons
 prev_button = ttk.Button(frame4, text="Previous")
 prev_button.pack(side=tk.LEFT, padx=5)
 
 next_button = ttk.Button(frame4, text="Next")
 next_button.pack(side=tk.LEFT, padx=5)
+
 
 # Functions for fetching and updating results
 def update_results_listbox(movies):
@@ -120,9 +129,8 @@ def fetch_movies(page=1):
         return None
 
     results = search_movies(title, genre, year, language, page)
-    
-    # Debugging API response
-    print("Results fetched:", results)  # Log full response for debugging
+
+    print("Results fetched:", results)  
 
     current_results = results.get("results", [])
     current_page = page
@@ -133,38 +141,43 @@ def fetch_movies(page=1):
         return None
 
     update_results_listbox(current_results)
+    update_page_repr()
 
 
-def fetch_next_page():
+def next_page():
     if current_page < total_pages:
         fetch_movies(current_page + 1)
 
-def fetch_previous_page():
+def previous_page():
     if current_page > 1:
         fetch_movies(current_page - 1)
 
-def add_to_watchlist():
+def add_to_list():
     selected_indices = results_listbox.curselection()
     for idx in selected_indices:
         movie = current_results[idx]
-        if movie not in watchlist:
-            watchlist.append(movie)
-            watchlist_listbox.insert(tk.END, movie.get("title", "Unknown"))
-    messagebox.showinfo("Success", "Selected movies added to watchlist.")
+        if movie not in list:
+            list.append(movie)
+            list_listbox.insert(tk.END, movie.get("title", "Unknown"))
+    messagebox.showinfo("Success", "Selected movies added to list.")
 
-def remove_from_watchlist():
-    selected_indices = watchlist_listbox.curselection()
+def remove_from_list():
+    selected_indices = list_listbox.curselection()
     for idx in selected_indices[::-1]:  # Remove in reverse to avoid index issues
-        watchlist.pop(idx)
-        watchlist_listbox.delete(idx)
-    messagebox.showinfo("Success", "Selected movies removed from watchlist.")
+        list.pop(idx)
+        list_listbox.delete(idx)
+    messagebox.showinfo("Success", "Selected movies removed from list.")
+
+def update_page_repr():
+    pg_rep.config(text=f"Page {current_page} of {total_pages}")
 
 # Button configurations
 fetch_button.configure(command=lambda: fetch_movies(1))
-next_button.configure(command=fetch_next_page)
-prev_button.configure(command=fetch_previous_page)
-add_button.configure(command=add_to_watchlist)
-remove_button.configure(command=remove_from_watchlist)
+next_button.configure(command=next_page)
+prev_button.configure(command=previous_page)
+add_button.configure(command=add_to_list)
+remove_button.configure(command=remove_from_list)
+save_button.configure(command=save_movie)
 
 # Run the main loop
 window.mainloop()

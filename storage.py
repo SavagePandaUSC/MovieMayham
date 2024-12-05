@@ -1,4 +1,6 @@
 import requests
+import tkinter as tk
+from tkinter import ttk, messagebox
 
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
@@ -117,6 +119,8 @@ def save_movie(id, rating, watch_date):
             file.write(str(i) + ',')
         
         file.write('\n')
+    
+    messagebox.showinfo("Success", "Movies Saved!")
 
 
 def save_show(id):
@@ -176,11 +180,12 @@ def watchDate(year, month, day):
 
 
 if __name__ == "__main__":
-    data = search_movies(
+   
+   """ data = search_movies(
     "The Matrix",       # Movie title to search for
     28,                 # Genre ID for "Action" (from genre_map)
     1999,            # Release year
     "en",                # Language code for English
     1                    # First page of results
-)
-    print(data)
+ )
+    print(data)"""
