@@ -28,7 +28,7 @@ genre_vals = [
 
 genre_map = {
     "": None,
-     28: "Action",
+    28: "Action",
     12: "Adventure",
     16: "Animation",
     35: "Comedy",
@@ -162,12 +162,16 @@ def fetch_movies(page=1):
 
     results = search_movies(title, genre, year, language, page)
 
-    print("Results fetched:", results)  # a simple terminal test
-    
-    current_results = results.get("results", [])
-    current_page = page
-    total_pages = results.get("total_pages", 1)
-
+    print(genre)  # a simple terminal test
+    if(genre == None):
+        current_results = results.get("results", [])
+        print(type(current_results[0]))
+        current_page = page
+        total_pages = results.get("total_pages", 1)
+    else:
+        current_results = results
+        current_page = page
+        total_pages = results.get("total_pages", 1)
     if not current_results:
         messagebox.showinfo("No Results", "No movies found. Try different filters.")
         return None

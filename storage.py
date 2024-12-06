@@ -16,7 +16,7 @@ def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     response = requests.get(url, params=paramiters)
     if(genre != None):
        response= genre_filter(response.json(), "animation")
-       return response.json()
+       return response
     else:
         print(type(response))
         return response.json()
