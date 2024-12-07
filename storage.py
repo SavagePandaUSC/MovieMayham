@@ -103,7 +103,7 @@ def save_movie(id, rating, watch_date):
 
         for line in file:
             
-            if  movie_data['id'] in line:
+            if str(movie_data['id']) in line:
                 print('This movie is already saved')
                 return None
             
@@ -120,7 +120,7 @@ def save_movie(id, rating, watch_date):
         ### rating = rate()
 
 
-        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
+        info = [movie_data['title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
         for i in info:
@@ -128,7 +128,7 @@ def save_movie(id, rating, watch_date):
         
         file.write('\n')
     
-    messagebox.showinfo("Success", "Movies Saved!")
+    messagebox.showinfo("Success", movie_data['title'] + " has been Saved!")
 
 
 def save_show(id):

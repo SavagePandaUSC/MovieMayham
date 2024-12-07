@@ -19,6 +19,8 @@ current_results = []
 current_page = 1
 total_pages = 1
 list = []
+results_mapping = {}  
+saved_list_ids = {}  
 
 ## Frame 0: Title and Desc
 frame0 = tk.Frame(window)
@@ -175,27 +177,28 @@ def clear_results():
     results_listbox.delete(0,tk.END)
 
 def update_results_listbox(movies):
+    global results_mapping
+    results_mapping.clear()  
     results_listbox.delete(0, tk.END)
-    for movie in movies:
+
+    for index, movie in enumerate(movies):
         title = movie.get("title", "Unknown")
         release_date = movie.get("release_date", "N/A")
-        adult = movie.get("adult", False)
+        movie_id = movie.get("id", "N/A")  
 
         display_text = f"{title} ({release_date})"
-        if adult:
-            display_text += " [18+]"
-
-        results_listbox.insert(tk.END, display_text)
-
+        results_mapping[index] = movie_id  # Map index to movie ID
+        results_listbox.insert(tk.END, display_text)  # Show title and release date
 
 def fetch_movies(page=1):
     global current_results, current_page, total_pages
 
     title = title_var.get()
     genre_name = genre_var.get()
-    genre = genre_map.get(genre_name)  # Now this will return the genre ID
+    genre = genre_map.get(genre_name)  
     language = language_var.get()
     year = year_var.get()
+    
 
     if not title:
         messagebox.showerror("Error", "Please enter a title.")
@@ -203,18 +206,14 @@ def fetch_movies(page=1):
 
     results = search_movies(title, genre, year, language, page)
 
-    print(genre)  # Test if genre is now the correct ID
     if genre is None:
         current_results = results.get("results", [])
-        print(type(current_results[0]))
         current_page = page
         total_pages = results.get("total_pages", 1)
     else:
-        current_results = results
-        #print(type(results))
-        current_page = page
-        print(len(results))
-        total_pages = 5 # this does not work for now 
+        pass
+        """Something with selecting a genre causes the results.get("results", []) to break need to find an else to fix"""
+   
 
     if not current_results:
         messagebox.showinfo("No Results", "No movies found. Try different filters.")
@@ -237,25 +236,35 @@ def previous_page():
 
 
 def add_to_list():
-    selected_index = results_listbox.curselection()
-    for index in selected_index:
-        movie = current_results[index]
-        if movie not in list:
-            list.append(movie)
-            list_listbox.insert(tk.END, movie.get("title", "Unknown"))
-    messagebox.showinfo("Success", "Selected movies added to list.")
+    """Add selected movies to the saved list"""
+    selected_indices = results_listbox.curselection()
+    for index in selected_indices:
+        movie_id = results_mapping.get(index)  # Get the movie ID
+        title = current_results[index].get("title", "Unknown")
+        release_date = current_results[index].get("release_date", "Unknown")
+        display_text = f"{title} ({release_date})"
+
+        # Checks to see if movies is already in the holding list
+        if movie_id not in saved_list_ids.values():
+            list_listbox.insert(tk.END, display_text)  
+            saved_list_ids[list_listbox.size() - 1] = movie_id  # Map saved index to movie ID
 
 
 def remove_from_list():
-    selected_index = list_listbox.curselection()
-    for index in selected_index[::-1]:  # Remove in reverse to avoid index issues
-        list.pop(index)
-        list_listbox.delete(index)
-    messagebox.showinfo("Success", "Selected movies removed from list.")
+    """Remove selected movies from the saved list."""
+
+    selected_indices = list_listbox.curselection()
+    for index in selected_indices[::-1]:  # Reverse order to stop index issues
+        list_listbox.delete(index)  # Remove item from Listbox
+        saved_list_ids.pop(index, None)  # Remove ID from mapping
+
+    messagebox.showinfo("Success", "Selected movies removed from the list.")
 
 
 def update_page_repr():
+    """Updates the page tracker"""
     pg_rep.config(text=f"Page {current_page} of {total_pages}")
+
 def view_poster():
     """Opens the poster of the selected movie in a new Tkinter window."""
     selected_index = results_listbox.curselection()
@@ -289,7 +298,14 @@ def view_poster():
     label.image = poster_image 
     label.pack()
 
+def save_list():
+    """Iterates throught throuth the holding list box and saves it to a file"""
+    
+    movie_ids = [saved_list_ids[index] for index in range(list_listbox.size())]
 
+    for id in movie_ids:
+        save_movie(id, "10-10-1010", "11")
+   
 
 
 # Button configurations
@@ -300,7 +316,8 @@ next_button.configure(command=next_page)
 prev_button.configure(command=previous_page)
 add_button.configure(command=add_to_list)
 remove_button.configure(command=remove_from_list)
-save_button.configure(command=save_movie)
+save_button.configure(command=save_list)
+
 #Poster buttons 
 view_poster_button = ttk.Button(frame3, text="View Poster", command=view_poster)
 view_poster_button.pack(side=tk.LEFT, padx=5)

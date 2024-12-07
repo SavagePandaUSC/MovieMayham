@@ -1,1 +1,4 @@
-Fight Club,David Fincher,1999-10-15,139,2015-04-14,9,Drama,550,
+How to Train Your Dragon,Dean DeBlois,2010-03-18,98,11,10-10-1010,Fantasy,10191,
+Dragon Ball: Mystical Adventure,Kazuhisa Takenouchi,1988-07-09,48,11,10-10-1010,Action,116776,
+Dragon,Sebastian Sommer,2024-03-18,93,11,10-10-1010,Action,1285002,
+Dragon Ball Super: Super Hero,Tetsuro Kodama,2022-06-11,99,11,10-10-1010,Animation,610150,
