@@ -1,19 +1,28 @@
 import requests
-import GUI
+import tkinter as tk
+from tkinter import ttk, messagebox
+from FilterFunctions import genre_filter
 
 API_KEY = "2fc9ee028a312888352de489e536da81"
 BASE_URL = "https://api.themoviedb.org/3"
 
-def search_movies(movie_name):
+def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     """Uses the API and finds a movies based on a given name and returns all of its relevant information"""
 
     movie_name = correct(movie_name)
 
     url = f"{BASE_URL}/search/movie"
-    paramiters = {"api_key": API_KEY, "query": movie_name}
+    paramiters = {"api_key": API_KEY, "query": movie_name, "with_genres": genre, "primary_release_year": year, "language": language, "page": page}
     response = requests.get(url, params=paramiters)
-    if response.status_code == 200:
-        return response.json()  
+    if(genre != None):
+       response= genre_filter(response.json(), "animation")
+       return response
+    else:
+        print(type(response))
+        return response.json()
+        
+    #if response.status_code == 200:
+    
     
     
 def search_movie_by_id(movie_id):
@@ -23,6 +32,12 @@ def search_movie_by_id(movie_id):
     paramiters = {'api_key': API_KEY}
     response = requests.get(url, params=paramiters)
     return response.json()
+
+
+def get_id(data):
+    """Recieves the data for a selected film and returns its id"""
+
+    return data['id']
 
 
 def get_director_by_id(id):
@@ -71,7 +86,7 @@ def correct(movie_title):
     return " ".join(change)
 
 
-def save_movie(id):
+def save_movie(id, rating, watch_date):
     """saves the relevant movie data to a txt file (passed parameter should be the id for a movie)
     (saves in order: title, director, year_released, length, when_watched, rating, genre, id)"""
 
@@ -96,22 +111,28 @@ def save_movie(id):
     with open('saved_movies.txt', 'a') as file:
 
         # queries the user for unique information (possibly could be changed a query user function)
-        watch_date = [input('Year you watched it: ')]
-        watch_date += [input('Month you watched it: ')]
-        watch_date += [input('Day of month you watched it: ')]
+        ### watch_date = [input('Year you watched it: ')]
+        ### watch_date += [input('Month you watched it: ')]
+        ### watch_date += [input('Day of month you watched it: ')]
         
-        watch_date = '-'.join(watch_date)
+        ### watch_date = '-'.join(watch_date)
 
-        rating = rate()
+        ### rating = rate()
 
 
-        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, str(rating), movie_data['genres'][0].get('name'), movie_data['id']]
+        info = [movie_data['original_title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
         for i in info:
             file.write(str(i) + ',')
         
         file.write('\n')
+    
+    messagebox.showinfo("Success", "Movies Saved!")
+
+
+def save_show(id):
+    pass
 
 
 def delete(title):
@@ -135,21 +156,44 @@ def delete(title):
             if title not in line:
                 file.write(line)
 
-def rate():
-    """This function returns a rating between 1 and 10"""
 
-    score = input('Please rate the movie on a scale of 1-10: ')
+def rateCheck(integer):
+    """This function takes an inputed rating checks if its acceotable and returns it in string format"""
 
-    if score < 1 or score > 10:
+    if integer < 1 or integer > 10:
         print('Your scoring must be between 1 and 10')
-        score = rate()
+        rateCheck(integer)
     
-    return score
+    return str(integer)
 
-    
+
+def watchDate(year, month, day):
+    """formats a watch date after recieving a year, month, day. (They should be in int form)"""
+
+    if year < 1900 or year > 2024 or year.isDecimal():
+        print("Unacceptable date!") 
+        return None
+    elif month < 1 or month > 12 or month.isDecimal():
+        print("Unacceptable date!") 
+        return None
+    elif day < 1 or day > 31 or day.isDecimal():
+        print("Unacceptable date!") 
+        return None
+
+
+    date = [year, month, day]
+
+
+    return '-'.join(date)
 
 
 if __name__ == "__main__":
-    
-    save_movie(550)
-    
+   
+   data = search_movies(
+    "Batman",       # Movie title to search for
+    "Animation",                 # Genre ID for "Action" (from genre_map)
+    2022,            # Release year
+    "en",                # Language code for English
+    1                    # First page of results
+ )
+   print(data)
