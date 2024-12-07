@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, font
 from storage import search_movies, save_movie, delete, get_id
 from PIL import Image, ImageTk
 import requests
@@ -10,18 +10,31 @@ window = tk.Tk()
 window.title("Movie Organizer")
 window.geometry("1200x800")
 
+## Fonts
+titleFont = font.Font(size=30)
+descFont = font.Font(size=10, slant='italic')
+
 # Data to manage list and pages
 current_results = []
 current_page = 1
 total_pages = 1
 list = []
 
+## Frame 0: Title and Desc
+frame0 = tk.Frame(window)
+frame0.pack()
+
+title = tk.Label(frame0, text="My Movies List", font=titleFont)
+title.pack(side=tk.TOP)
+desc = tk.Label(frame0, text="Search for movies you've seen and add them to your list. Then, click them to view their stats.", font=descFont)
+desc.pack(side=tk.BOTTOM)
+
 ## Frame 1: Filter options
 frame1 = tk.Frame(window)
 frame1.pack(pady=10)
 
 filter_label = tk.Label(frame1, text="Filter by:")
-filter_label.pack(side=tk.LEFT, padx=5)
+filter_label.grid(row=0,column=0, padx=5)
 
 genre_vals = [
     "", "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary",
@@ -61,24 +74,36 @@ genre_map = {
 }
 
 # Widgets for filters
+title_label = tk.Label(frame1, text="Title")
 title_var = tk.StringVar()
 title_entry = ttk.Entry(frame1, textvariable=title_var, width=30)
-title_entry.pack(side=tk.LEFT, padx=5)
+title_entry.grid(row=0,column=1,padx=5)
+title_label.grid(row=1,column=1,padx=5)
 
+genre_label = tk.Label(frame1, text="Genre")
 genre_var = tk.StringVar()
 genre_combo = ttk.Combobox(frame1, state="readonly", values=genre_vals, textvariable=genre_var)
-genre_combo.pack(side=tk.LEFT, padx=5)
+genre_combo.grid(row=0,column=2,padx=5)
+genre_label.grid(row=1,column=2,padx=5)
 
+language_label = tk.Label(frame1, text="Language")
 language_var = tk.StringVar()
-language_combo = ttk.Combobox(frame1, state="readonly", values=["en", "es", "fr", "de"], textvariable=language_var)
-language_combo.pack(side=tk.LEFT, padx=5)
+language_values = ["", "English", "Spanish", "French", "German", "Chinese", "Korean", "Japanese", "Portuguese", "other"]
+language_combo = ttk.Combobox(frame1, state="readonly", values=language_values, textvariable=language_var)
+language_combo.grid(row=0,column=3,padx=5)
+language_label.grid(row=1,column=3,padx=5)
 
+year_label = tk.Label(frame1, text="Year")
 year_var = tk.StringVar()
 year_entry = ttk.Entry(frame1, textvariable=year_var, width=10)
-year_entry.pack(side=tk.LEFT, padx=5)
+year_entry.grid(row=0,column=4,padx=5)
+year_label.grid(row=1,column=4,padx=5)
 
 fetch_button = ttk.Button(frame1, text="Fetch")
-fetch_button.pack(side=tk.LEFT, padx=5)
+fetch_button.grid(row=0,column=5,padx=5)
+
+clear_filters_button = ttk.Button(frame1, text="Clear filters")
+clear_filters_button.grid(row=1,column=5, padx=5)
 
 ## Frame 2: Results and list Display
 frame2 = tk.Frame(window)
@@ -88,7 +113,7 @@ frame2.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 results_frame = tk.LabelFrame(frame2, text="Search Results", padx=10, pady=10)
 results_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
 
-results_listbox = tk.Listbox(results_frame, height=20, width=50)
+results_listbox = tk.Listbox(results_frame, height=20, width=50, selectmode=tk.MULTIPLE)
 results_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 results_scrollbar = ttk.Scrollbar(results_frame, orient=tk.VERTICAL, command=results_listbox.yview)
@@ -109,6 +134,9 @@ list_listbox.config(yscrollcommand=list_scrollbar.set)
 ## Frame 3: Buttons for Actions
 frame3 = tk.Frame(window)
 frame3.pack(pady=10)
+
+clear_results_button = ttk.Button(frame3, text="Clear search results")
+clear_results_button.pack(side=tk.LEFT, padx=5)
 
 add_button = ttk.Button(frame3, text="Add to list")
 add_button.pack(side=tk.LEFT, padx=5)
@@ -136,6 +164,16 @@ next_button.pack(side=tk.LEFT, padx=5)
 
 
 # Functions for fetching and updating results
+
+def clear_filters():
+    title_entry.delete(0, tk.END)
+    language_combo.current(0)
+    year_entry.delete(0, tk.END)
+    genre_combo.current(0)
+
+def clear_results():
+    results_listbox.delete(0,tk.END)
+
 def update_results_listbox(movies):
     results_listbox.delete(0, tk.END)
     for movie in movies:
@@ -255,8 +293,9 @@ def view_poster():
 view_poster_button = ttk.Button(frame3, text="View Poster", command=view_poster)
 view_poster_button.pack(side=tk.LEFT, padx=5)
 
-
 # Button configurations
+clear_filters_button.configure(command=clear_filters)
+clear_results_button.configure(command=clear_results)
 fetch_button.configure(command=lambda: fetch_movies(1))
 next_button.configure(command=next_page)
 prev_button.configure(command=previous_page)
