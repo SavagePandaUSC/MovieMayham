@@ -105,7 +105,7 @@ results_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 results_listbox.config(yscrollcommand=results_scrollbar.set)
 
 # Box 2: Saved list
-list_frame = tk.LabelFrame(frame2, text="Saved list", padx=10, pady=10)
+list_frame = tk.LabelFrame(frame2, text="Holding list", padx=10, pady=10)
 list_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5)
 
 list_listbox = tk.Listbox(list_frame, height=20, width=50)
@@ -117,19 +117,22 @@ list_listbox.config(yscrollcommand=list_scrollbar.set)
 
 ## Frame 3: Buttons for Actions
 frame3 = tk.Frame(window)
-frame3.pack(pady=10)
+frame3.pack(pady=10,fill='x')
 
 clear_results_button = ttk.Button(frame3, text="Clear search results")
 clear_results_button.pack(side=tk.LEFT, padx=5)
 
-add_button = ttk.Button(frame3, text="Add to list")
+view_poster_button = ttk.Button(frame3, text="View Poster")
+view_poster_button.pack(side=tk.LEFT, padx=5)
+
+add_button = ttk.Button(frame3, text="Add to holding list")
 add_button.pack(side=tk.LEFT, padx=5)
 
-remove_button = ttk.Button(frame3, text="Remove from list")
-remove_button.pack(side=tk.LEFT, padx=5)
+save_button = ttk.Button(frame3, text="Save Holding movies to Watched")
+save_button.pack(side=tk.RIGHT, padx=5)
 
-save_button = ttk.Button(frame3, text="Save to Watched")
-save_button.pack(side=tk.LEFT, padx=5)
+remove_button = ttk.Button(frame3, text="Remove from holding list")
+remove_button.pack(side=tk.RIGHT, padx=5)
 
 ## Frame 4: Page Control
 frame4 = tk.Frame(window)
@@ -290,6 +293,8 @@ def save_list():
 
     for id in movie_ids:
         save_movie(id, "10-10-1010", "11")
+    
+    messagebox.showinfo("Success", "All movies in Holding updated to Saved List!")
    
 
 
@@ -302,10 +307,8 @@ prev_button.configure(command=previous_page)
 add_button.configure(command=add_to_list)
 remove_button.configure(command=remove_from_list)
 save_button.configure(command=save_list)
+view_poster_button.configure(command=view_poster)
 
-#Poster buttons 
-view_poster_button = ttk.Button(frame3, text="View Poster", command=view_poster)
-view_poster_button.pack(side=tk.LEFT, padx=5)
 # Run the main loop
 window.mainloop()
 
