@@ -14,8 +14,8 @@ def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     url = f"{BASE_URL}/search/movie"
     paramiters = {"api_key": API_KEY, "query": movie_name, "with_genres": genre, "primary_release_year": year, "language": language, "page": page}
     response = requests.get(url, params=paramiters)
-    if(genre != None):
-       response= genre_filter(response.json(), "animation")
+    if(genre != ""):
+       response= genre_filter(response.json(), genre)
        return response
     else:
         print(type(response))
@@ -191,8 +191,8 @@ if __name__ == "__main__":
    
    data = search_movies(
     "Batman",       # Movie title to search for
-    "Animation",                 # Genre ID for "Action" (from genre_map)
-    2022,            # Release year
+    "",                 # Genre ID for "Action" (from genre_map)
+    None,            # Release year
     "en",                # Language code for English
     1                    # First page of results
  )

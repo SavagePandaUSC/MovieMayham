@@ -42,36 +42,6 @@ genre_vals = [
     "Romance", "Science Fiction", "TV Movie", "Thriller", "War", "Western"
 ]
 
-genre_map = {
-    "": None,
-    "Action": 28,
-    "Adventure": 12,
-    "Animation": 16,
-    "Comedy": 35,
-    "Crime": 80,
-    "Documentary": 99,
-    "Drama": 18,
-    "Family": 10751,
-    "Fantasy": 14,
-    "History": 36,
-    "Horror": 27,
-    "Music": 10402,
-    "Mystery": 9648,
-    "Romance": 10749,
-    "Science Fiction": 878,
-    "TV Movie": 10770,
-    "Thriller": 53,
-    "War": 10752,
-    "Western": 37,
-    "Action & Adventure": 10759,
-    "Kids": 10762,
-    "News": 10763,
-    "Reality": 10764,
-    "Sci-Fi & Fantasy": 10765,
-    "Soap": 10766,
-    "Talk": 10767,
-    "War & Politics": 10768
-}
 
 # Widgets for filters
 title_label = tk.Label(frame1, text="Title")
@@ -192,8 +162,9 @@ def fetch_movies(page=1):
     global current_results, current_page, total_pages
 
     title = title_var.get()
-    genre_name = genre_var.get()
-    genre = genre_map.get(genre_name)  # Now this will return the genre ID
+    genre = genre_var.get()
+    if genre is None:
+        genre = ""
     language = language_var.get()
     year = year_var.get()
 
@@ -204,7 +175,7 @@ def fetch_movies(page=1):
     results = search_movies(title, genre, year, language, page)
 
     print(genre)  # Test if genre is now the correct ID
-    if genre is None:
+    if genre == "":
         current_results = results.get("results", [])
         print(type(current_results[0]))
         current_page = page
