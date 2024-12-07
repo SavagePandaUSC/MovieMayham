@@ -211,8 +211,9 @@ def fetch_movies(page=1):
         current_page = page
         total_pages = results.get("total_pages", 1)
     else:
-        pass
-        """Something with selecting a genre causes the results.get("results", []) to break need to find an else to fix"""
+        current_results = results.get("results", [])
+        current_page = page
+        total_pages = 5
    
 
     if not current_results:
