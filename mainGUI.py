@@ -165,19 +165,17 @@ def fetch_movies(page=1):
 
     title = title_var.get()
     genre = genre_var.get()
-    if genre is None:
-        genre = ""
     language = language_var.get()
     year = year_var.get()
-
     if not title:
         messagebox.showerror("Error", "Please enter a title.")
         return None
-
+    if(genre == ""):
+        genre = None
     results = search_movies(title, genre, year, language, page)
 
     print(genre)  # Test if genre is now the correct ID
-    if genre == "":
+    if genre is None:
         current_results = results.get("results", [])
         print(type(current_results[0]))
         current_page = page
