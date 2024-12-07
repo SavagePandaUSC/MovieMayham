@@ -60,7 +60,19 @@ genre_label.grid(row=1,column=2,padx=5)
 
 language_label = tk.Label(frame1, text="Language")
 language_var = tk.StringVar()
-language_values = ["", "English", "Spanish", "French", "German", "Chinese", "Korean", "Japanese", "Portuguese", "other"]
+language_values = ["", "English", "Spanish", "French", "German", "Chinese", "Korean", "Japanese", "Portuguese"]
+language_values_dict = {
+    "English": "en",
+    "Spanish": "es",
+    "French": "fr",
+    "German": "de",
+    "Chinese": "zh",
+    "Korean": "ko",
+    "Japanese": "ja",
+    "Portuguese": "pt",
+    "": ""
+}
+
 language_combo = ttk.Combobox(frame1, state="readonly", values=language_values, textvariable=language_var)
 language_combo.grid(row=0,column=3,padx=5)
 language_label.grid(row=1,column=3,padx=5)
@@ -165,7 +177,7 @@ def fetch_movies(page=1):
 
     title = title_var.get()
     genre = genre_var.get()
-    language = language_var.get()
+    language = language_values_dict[language_var.get()] 
     year = year_var.get()
     if not title:
         messagebox.showerror("Error", "Please enter a title.")
