@@ -251,9 +251,8 @@ def view_poster():
     label.image = poster_image 
     label.pack()
 
-# Add a new button for viewing posters
-view_poster_button = ttk.Button(frame3, text="View Poster", command=view_poster)
-view_poster_button.pack(side=tk.LEFT, padx=5)
+
+
 
 
 # Button configurations
@@ -263,7 +262,9 @@ prev_button.configure(command=previous_page)
 add_button.configure(command=add_to_list)
 remove_button.configure(command=remove_from_list)
 save_button.configure(command=save_movie)
-
+#Poster buttons 
+view_poster_button = ttk.Button(frame3, text="View Poster", command=view_poster)
+view_poster_button.pack(side=tk.LEFT, padx=5)
 # Run the main loop
 window.mainloop()
 
