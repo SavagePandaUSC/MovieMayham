@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from storage import search_movies, save_movie, delete, get_id
+from PIL import Image, ImageTk
+import requests
+from io import BytesIO
 
 # Create window
 window = tk.Tk()
@@ -215,6 +218,42 @@ def remove_from_list():
 
 def update_page_repr():
     pg_rep.config(text=f"Page {current_page} of {total_pages}")
+def view_poster():
+    """Opens the poster of the selected movie in a new Tkinter window."""
+    selected_index = results_listbox.curselection()
+    if not selected_index:
+        messagebox.showerror("Error", "Please select a movie to view the poster.")
+        return
+
+    movie = current_results[selected_index[0]]
+    poster_path = movie.get("poster_path")
+    if not poster_path:
+        messagebox.showinfo("No Poster", "No poster available for the selected movie.")
+        return
+
+    poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}"  # Construct the poster URL
+
+    response = requests.get(poster_url)
+    response.raise_for_status()  # Raise an error if the request failed
+    img_data = BytesIO(response.content)  # Read the image data
+    img = Image.open(img_data)
+
+        # Resize the image to fit in the window
+    img = img.resize((400, 600), Image.Resampling.LANCZOS)  # Updated for newer Pillow versions
+    poster_image = ImageTk.PhotoImage(img)
+
+        # Create a new window to display the poster
+    poster_window = tk.Toplevel(window)
+    poster_window.title(f"Poster - {movie.get('title', 'Unknown')}")
+    poster_window.geometry("420x620")  # Adjust the size slightly larger than the image
+
+    label = tk.Label(poster_window, image=poster_image)
+    label.image = poster_image 
+    label.pack()
+
+# Add a new button for viewing posters
+view_poster_button = ttk.Button(frame3, text="View Poster", command=view_poster)
+view_poster_button.pack(side=tk.LEFT, padx=5)
 
 
 # Button configurations
