@@ -10,18 +10,18 @@ def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     """Uses the API and finds a movies based on a given name and returns all of its relevant information"""
 
     movie_name = correct(movie_name)
-
+    if(genre == None):
+        genre = ""
     url = f"{BASE_URL}/search/movie"
     paramiters = {"api_key": API_KEY, "query": movie_name, "with_genres": genre, "primary_release_year": year, "language": language, "page": page}
     response = requests.get(url, params=paramiters)
+    print(genre)
     if(genre != None):
-       response= genre_filter(response.json(), "animation")
+       response= genre_filter(response.json(), genre)
        return response
     else:
         print(type(response))
         return response.json()
-        
-    #if response.status_code == 200:
     
     
     
@@ -191,7 +191,7 @@ if __name__ == "__main__":
    
    data = search_movies(
     "Batman",       # Movie title to search for
-    "Animation",                 # Genre ID for "Action" (from genre_map)
+    "Crime",                 # Genre ID for "Action" (from genre_map)
     2022,            # Release year
     "en",                # Language code for English
     1                    # First page of results
