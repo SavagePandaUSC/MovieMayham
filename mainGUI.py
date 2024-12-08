@@ -4,7 +4,7 @@ from storage import search_movies, save_movie, delete, get_id
 from PIL import Image, ImageTk
 import requests
 from io import BytesIO
-from movieClass import Movie, make_movie_objects
+from MovieClass import Movie, make_movie_objects
 
 # Create window
 window = tk.Tk()
@@ -270,15 +270,15 @@ def view_poster():
         messagebox.showinfo("No Poster", "No poster available for the selected movie.")
         return
 
-    poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}"  # Construct the poster URL
+    poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}"  # gets the poster URL
 
     response = requests.get(poster_url)
     response.raise_for_status()  # Raise an error if the request failed
-    img_data = BytesIO(response.content)  # Read the image data
+    img_data = BytesIO(response.content)
     img = Image.open(img_data)
 
         # Resize the image to fit in the window
-    img = img.resize((400, 600), Image.Resampling.LANCZOS)  # Updated for newer Pillow versions
+    img = img.resize((400, 600), Image.Resampling.LANCZOS)
     poster_image = ImageTk.PhotoImage(img)
 
         # Create a new window to display the poster
@@ -289,6 +289,7 @@ def view_poster():
     label = tk.Label(poster_window, image=poster_image)
     label.image = poster_image 
     label.pack()
+    
 
 def save_list():
     """Iterates through the holding list box and saves it to a file"""
@@ -375,6 +376,7 @@ def remove_movie_from_watch_list():
         view_watch_list()  # Refresh the watch list display
     else:
         messagebox.showerror("Error", "Movie not found in the watch list.")
+
  
 # Button configurations
 clear_filters_button.configure(command=clear_filters)
