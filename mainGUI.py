@@ -29,7 +29,7 @@ frame0.pack()
 
 title = tk.Label(frame0, text="My Movies List", font=titleFont)
 title.pack(side=tk.TOP)
-desc = tk.Label(frame0, text="Search for movies you've seen and add them to your list. Then, click them to view their stats.", font=descFont)
+desc = tk.Label(frame0, text="Search for movies you've seen, view their poster, and add them to your Holding list. Select an item in the Holding list\nif you wish remove it. Then, click 'update to Watch list', and view your Watch list to see all your movies' stats.", font=descFont)
 desc.pack(side=tk.BOTTOM)
 
 ## Frame 1: Filter options
