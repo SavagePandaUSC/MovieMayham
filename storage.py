@@ -138,6 +138,12 @@ def delete(title):
             if title not in line:
                 file.write(line)
 
+def fetch_summary(id):
+    """grabs the summary of a movie using its id and then returns said summary"""
+    data = search_movie_by_id(id)
+
+    return data['overview']
+
 
 if __name__ == "__main__":
    
@@ -148,4 +154,3 @@ if __name__ == "__main__":
     "en",                # Language code for English
     1                    # First page of results
  )
-   print(type(data))

@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, font
-from storage import search_movies, save_movie, delete, get_id
+from storage import search_movies, save_movie, delete, fetch_summary
 from PIL import Image, ImageTk
 import requests
 from io import BytesIO
@@ -301,7 +301,7 @@ def save_list():
     movie_ids = [saved_list_ids[index] for index in range(list_listbox.size())]
 
     for id in movie_ids:
-        save_movie(id, "10-10-1010", "11")
+        save_movie(id, "10-10-1010")
     
     messagebox.showinfo("Success", "All movies in Holding updated to Saved List!")
 
@@ -388,7 +388,6 @@ def remove_movie_from_watch_list():
     else:
         messagebox.showerror("Error", "Movie not found in the watch list.")
 
- 
 # Button configurations
 clear_filters_button.configure(command=clear_filters)
 clear_results_button.configure(command=clear_results)
