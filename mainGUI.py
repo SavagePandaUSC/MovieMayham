@@ -154,12 +154,6 @@ prev_button.pack(side=tk.LEFT, padx=5)
 next_button = ttk.Button(frame4, text="Next")
 next_button.pack(side=tk.LEFT, padx=5)
 
-## Frame 5: the watch list screen; will appear when all previous frames are invisible
-frame5 = tk.Frame(window)
-
-go_back_button = tk.Button(frame5, text="Go back")
-go_back_button.pack()
-
 # Functions for fetching and updating results
 
 def clear_filters():
@@ -306,6 +300,13 @@ def save_list():
     
     messagebox.showinfo("Success", "All movies in Holding updated to Saved List!")
 
+
+## Frame 5: the watch list screen; will appear when all previous frames are invisible
+frame5 = tk.Frame(window)
+
+go_back_button = tk.Button(frame5, text="Go back")
+go_back_button.pack()
+
 # Displaying the Watch List
 
 frame5a = tk.Frame(frame5)
@@ -333,15 +334,15 @@ def view_watch_list():
     frame2.pack_forget()
     frame3.pack_forget()
     frame4.pack_forget()
-    frame5.pack()
+    frame5.pack(fill=tk.BOTH, expand=True)
 
 def go_back():
     """unhides all frames but frame5, and hides frame5"""
     frame0.pack()
-    frame1.pack()
-    frame2.pack()
-    frame3.pack()
-    frame4.pack()
+    frame1.pack(pady=10)
+    frame2.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+    frame3.pack(pady=10,fill='x')
+    frame4.pack(pady=10)
     frame5.pack_forget()
 
 # Button configurations
