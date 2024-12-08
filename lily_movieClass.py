@@ -10,7 +10,24 @@ class Movie:
         self.rating = line[5]
         self.genre = line[6]
         self.id = line[7]
+    def remove_movie(self):
+        """Removes this movie from the saved_movies.txt file based on its ID."""
+        file_path='saved_movies.txt'
+        try:
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+            
+            # Filter out the line with the matching movie ID
+            updated_lines = [line for line in lines if line.split(',')[7].strip() != self.id]
 
+            with open(file_path, 'w') as file:
+                file.writelines(updated_lines)
+            
+            print(f"Movie '{self.title}' successfully removed.")
+        except FileNotFoundError:
+            print(f"Error: File '{file_path}' not found.")
+        except Exception as e:
+            print(f"An error occurred while removing the movie: {e}")
 def make_movie_objects():
     holder = {}
     with open('saved_movies.txt', 'r') as file:

@@ -350,6 +350,32 @@ def go_back():
     frame4.pack(pady=10)
     frame5.pack_forget()
 
+
+def remove_movie_from_watch_list():
+    """Remove selected movie from the watch list."""
+    selected_item = tree.selection()  # Get selected item in the TreeView
+    if not selected_item:
+        messagebox.showerror("Error", "Please select a movie to remove.")
+        return
+
+    movie_title = tree.item(selected_item, "text").split(" - ")[0]  # Extract the title
+    holder = make_movie_objects()
+
+    # Find the movie by title (simplistic approach, assumes unique titles)
+    movie_to_remove = None
+    for movie in holder.values():
+        if movie.title == movie_title:
+            movie_to_remove = movie
+            break
+
+    if movie_to_remove:
+        # Remove the movie using its method
+        movie_to_remove.remove_movie()
+        messagebox.showinfo("Success", f"Movie '{movie_to_remove.title}' removed from the watch list.")
+        view_watch_list()  # Refresh the watch list display
+    else:
+        messagebox.showerror("Error", "Movie not found in the watch list.")
+ 
 # Button configurations
 clear_filters_button.configure(command=clear_filters)
 clear_results_button.configure(command=clear_results)
@@ -362,7 +388,9 @@ save_button.configure(command=save_list)
 view_poster_button.configure(command=view_poster)
 view_button.configure(command=view_watch_list)
 go_back_button.configure(command=go_back)
-
+remove_watch_button = tk.Button(frame5, text="Remove Movie")
+remove_watch_button.pack()
+remove_watch_button.configure(command=remove_movie_from_watch_list)    
 # Run the main loop
 window.mainloop()
 
