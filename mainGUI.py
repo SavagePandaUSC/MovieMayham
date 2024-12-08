@@ -60,7 +60,7 @@ genre_label.grid(row=1,column=2,padx=5)
 
 language_label = tk.Label(frame1, text="Language")
 language_var = tk.StringVar()
-language_values = ["", "English", "Spanish", "French", "German", "Chinese", "Korean", "Japanese", "Portuguese"]
+language_values = ["", "English", "Spanish", "French", "German", "Chinese", "Korean", "Japanese", "Portuguese", "Hindi"]
 language_values_dict = {
     "English": "en",
     "Spanish": "es",
@@ -70,6 +70,7 @@ language_values_dict = {
     "Korean": "ko",
     "Japanese": "ja",
     "Portuguese": "pt",
+    "Hindi": "hi",
     "": ""
 }
 
