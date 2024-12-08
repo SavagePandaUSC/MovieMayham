@@ -116,9 +116,6 @@ def save_movie(id, rating, watch_date):
             file.write(str(i) + ',')
         
         file.write('\n')
-    
-    messagebox.showinfo("Success", movie_data['title'] + " has been Saved!")
-
 
 def delete(title):
     """deletes a given movie"""
