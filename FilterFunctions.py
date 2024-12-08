@@ -15,7 +15,7 @@ def get_genres(is_tv):
 
 def genre_filter(content, selected_genre):
     GENRE_MAP = {
-    #movie genras
+    #movie genras 
     28: "Action",
     12: "Adventure",
     16: "Animation",
