@@ -157,15 +157,18 @@ next_button.pack(side=tk.LEFT, padx=5)
 # Functions for fetching and updating results
 
 def clear_filters():
+    """Clears all filters input by the user"""
     title_entry.delete(0, tk.END)
     language_combo.current(0)
     year_entry.delete(0, tk.END)
     genre_combo.current(0)
 
 def clear_results():
+    """Clears all results in the resutls listbox"""
     results_listbox.delete(0,tk.END)
 
 def update_results_listbox(movies):
+    """used in fetch_movies to clear & update results listbox each time the fetch button is pressed"""
     global results_mapping
     results_mapping.clear()  
     results_listbox.delete(0, tk.END)
@@ -180,6 +183,7 @@ def update_results_listbox(movies):
         results_listbox.insert(tk.END, display_text)  # Show title and release date
 
 def fetch_movies(page=1):
+    """populates the results listbox with results from the API"""
     global current_results, current_page, total_pages
 
     title = title_var.get()
