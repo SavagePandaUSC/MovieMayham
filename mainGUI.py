@@ -308,6 +308,9 @@ frame5 = tk.Frame(window)
 go_back_button = tk.Button(frame5, text="Go back")
 go_back_button.pack()
 
+remove_watch_button = tk.Button(frame5, text="Remove Movie")
+remove_watch_button.pack()
+
 # Displaying the Watch List
 
 frame5a = tk.Frame(frame5)
@@ -394,8 +397,6 @@ save_button.configure(command=save_list)
 view_poster_button.configure(command=view_poster)
 view_button.configure(command=view_watch_list)
 go_back_button.configure(command=go_back)
-remove_watch_button = tk.Button(frame5, text="Remove Movie")
-remove_watch_button.pack()
 remove_watch_button.configure(command=remove_movie_from_watch_list)    
 # Run the main loop
 window.mainloop()

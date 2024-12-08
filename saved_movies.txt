@@ -1,4 +1,3 @@
-The Batman,Matt Reeves,2022-03-01,177,11,10-10-1010,Crime,414906,
 The Suicide Squad,James Gunn,2021-07-28,132,11,10-10-1010,Action,436969,
 War for the Planet of the Apes,Matt Reeves,2017-07-11,140,11,10-10-1010,Drama,281338,
 Get Out,Jordan Peele,2017-02-24,104,11,10-10-1010,Mystery,419430,
