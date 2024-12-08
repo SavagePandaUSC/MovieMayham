@@ -130,14 +130,14 @@ view_poster_button.pack(side=tk.LEFT, padx=5)
 add_button = ttk.Button(frame3, text="Add to Holding list")
 add_button.pack(side=tk.LEFT, padx=5)
 
-save_button = ttk.Button(frame3, text="Save Holding movies to Watched list")
+save_button = ttk.Button(frame3, text="Update Holding list to Watch list")
 save_button.pack(side=tk.RIGHT, padx=5)
 
 remove_button = ttk.Button(frame3, text="Remove from Holding list")
 remove_button.pack(side=tk.RIGHT, padx=5)
 
 view_button = ttk.Button(frame3, text="VIEW WATCH LIST")
-view_button.pack(side=tk.RIGHT, padx=5)
+view_button.pack(side=tk.BOTTOM, padx=5)
 
 ## Frame 4: Page Control
 frame4 = tk.Frame(window)
@@ -319,6 +319,10 @@ tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 tree_scrollbar = ttk.Scrollbar(frame5a, orient=tk.VERTICAL, command=tree.yview)
 tree_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 tree.config(yscrollcommand=tree_scrollbar.set)
+
+style = ttk.Style()
+style.configure("Treeview", rowheight=100)
+
    
 # Function for switching to Watch List:
 
