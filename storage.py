@@ -15,7 +15,6 @@ def search_movies(movie_name, genre=None, year=None, language=None, page=1):
     response = requests.get(url, params=paramiters)
     #print(type(genre))
     if(genre != None):
-       print("fuck")
        response= genre_filter(response.json(), genre)
        return response
     else:
@@ -50,8 +49,9 @@ def get_director_by_id(id):
         credits = response.json()
         # Filter crew members to find the director
         director = [member['name'] for member in credits['crew'] if member['job'] == 'Director']
+        
         return director[0]
- 
+    
 
 
 def correct(movie_title):
@@ -109,16 +109,6 @@ def save_movie(id, rating, watch_date):
     # appends the file to save movie details
     with open('saved_movies.txt', 'a') as file:
 
-        # queries the user for unique information (possibly could be changed a query user function)
-        ### watch_date = [input('Year you watched it: ')]
-        ### watch_date += [input('Month you watched it: ')]
-        ### watch_date += [input('Day of month you watched it: ')]
-        
-        ### watch_date = '-'.join(watch_date)
-
-        ### rating = rate()
-
-
         info = [movie_data['title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
@@ -126,9 +116,8 @@ def save_movie(id, rating, watch_date):
             file.write(str(i) + ',')
         
         file.write('\n')
-
-def save_show(id):
-    pass
+    
+    messagebox.showinfo("Success", movie_data['title'] + " has been Saved!")
 
 
 def delete(title):
@@ -151,36 +140,6 @@ def delete(title):
         for line in lines:
             if title not in line:
                 file.write(line)
-
-
-def rateCheck(integer):
-    """This function takes an inputed rating checks if its acceotable and returns it in string format"""
-
-    if integer < 1 or integer > 10:
-        print('Your scoring must be between 1 and 10')
-        rateCheck(integer)
-    
-    return str(integer)
-
-
-def watchDate(year, month, day):
-    """formats a watch date after recieving a year, month, day. (They should be in int form)"""
-
-    if year < 1900 or year > 2024 or year.isDecimal():
-        print("Unacceptable date!") 
-        return None
-    elif month < 1 or month > 12 or month.isDecimal():
-        print("Unacceptable date!") 
-        return None
-    elif day < 1 or day > 31 or day.isDecimal():
-        print("Unacceptable date!") 
-        return None
-
-
-    date = [year, month, day]
-
-
-    return '-'.join(date)
 
 
 if __name__ == "__main__":
