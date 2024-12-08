@@ -4,7 +4,7 @@ from storage import search_movies, save_movie, delete, get_id
 from PIL import Image, ImageTk
 import requests
 from io import BytesIO
-from lily_movieClass import Movie, make_movie_objects
+from movieClass import Movie, make_movie_objects
 
 # Create window
 window = tk.Tk()
@@ -196,7 +196,7 @@ def fetch_movies(page=1):
     print(genre)  # Test if genre is now the correct ID
     if genre is None:
         current_results = results.get("results", [])
-        print(type(current_results[0]))
+        #print(type(current_results[0]))
         current_page = page
         total_pages = results.get("total_pages", 1)
     else:

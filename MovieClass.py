@@ -1,71 +1,58 @@
-#test
+from storage import search_movies, save_movie, delete, get_id
+
 class Movie:
-    def __init__(self, title, director, year_released, length, when_watched, rating, genre):
-        self._title = title
-        self._director = director
-        self._year_released = year_released
-        self._length = length  # in minutes
-        self._when_watched = when_watched
-        self._rating = rating  # scale of 1-10, or as preferred
-        self._genre = genre
-    def __init__(self):
-        self._title = ""
-        self._director = ""
-        self._year_released = ""
-        self._length = ""  # in minutes
-        self._when_watched = ""
-        self._rating = ""  # scale of 1-10, or as preferred
-        self._genre = ""
-        self.id = ""
-    # Getter and setter for title
-    def get_title(self):
-        return self._title
+    def __init__(self, line):
+        self.title = line[0]
+        self.director = line[1]
+        self.release_date = line[2]
+        self.runtime = line[3]
+        self.watch_date = line[4]
+        self.rating = line[5]
+        self.genre = line[6]
+        self.id = line[7]
+    def remove_movie(self):
+        """Removes this movie from the saved_movies.txt file based on its ID."""
+        file_path='saved_movies.txt'
+        try:
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+            
+            # Filter out the line with the matching movie ID
+            updated_lines = [line for line in lines if line.split(',')[7].strip() != self.id]
 
-    def setId(self, input):
-        self.id = input
-    def getId(self):
-        return self.id
-    def set_title(self, title):
-        self._title = title
+            with open(file_path, 'w') as file:
+                file.writelines(updated_lines)
+            
+            print(f"Movie '{self.title}' successfully removed.")
+        except FileNotFoundError:
+            print(f"Error: File '{file_path}' not found.")
+        except Exception as e:
+            print(f"An error occurred while removing the movie: {e}")
+def make_movie_objects():
+    holder = {}
+    with open('saved_movies.txt', 'r') as file:
+        lines = file.readlines()
+        for l in lines:
+            l = l.split(',')
+            holder[l[7]] = Movie(l) #holder[l][7] is the movie's ID number
+    return holder
 
-    # Getter and setter for director
-    def get_director(self):
-        return self._director
+#test: 
+# make_movie_objects()
+# print(holder['13355'].title)
 
-    def set_director(self, director):
-        self._director = director
 
-    # Getter and setter for year released
-    def get_year_released(self):
-        return self._year_released
+"""
+example for reference:
+info = [movie_data['title'], director, movie_data['release_date'], 
+movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
 
-    def set_year_released(self, year_released):
-        self._year_released = year_released
-
-    # Getter and setter for length
-    def get_length(self):
-        return self._length
-
-    def set_length(self, length):
-        self._length = length
-
-    # Getter and setter for when watched
-    def get_when_watched(self):
-        return self._when_watched
-
-    def set_when_watched(self, when_watched):
-        self._when_watched = when_watched
-
-    # Getter and setter for rating
-    def get_rating(self):
-        return self._rating
-
-    def set_rating(self, rating):
-        self._rating = rating
-
-    # Getter and setter for genre
-    def get_genre(self):
-        return self._genre
-
-    def set_genre(self, genre):
-        self._genre = genre
+Scooby-Doo! Pirates Ahoy!, #title
+Chuck Sheetz, #director
+2006-09-19, #release date
+71, #runtime
+11, #watchdate?
+10-10-1010, #rating?
+Fantasy, #genre
+13355, #id
+"""
