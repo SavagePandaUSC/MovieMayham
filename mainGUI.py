@@ -301,7 +301,7 @@ def save_list():
     movie_ids = [saved_list_ids[index] for index in range(list_listbox.size())]
 
     for id in movie_ids:
-        save_movie(id, "10-10-1010")
+        save_movie(id)
     
     messagebox.showinfo("Success", "All movies in Holding updated to Saved List!")
 
