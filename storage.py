@@ -85,8 +85,8 @@ def correct(movie_title):
     return " ".join(change)
 
 
-def save_movie(id, rating, watch_date):
-    """saves the relevant movie data to a txt file (passed parameter should be the id for a movie)
+def save_movie(id, watch_date):
+    """saves the relevant movie data to a txt file (passed parameter should be the id for a movie, and a users inputted watch date)
     (saves in order: title, director, year_released, length, when_watched, rating, genre, id)"""
 
     #recieves the data and director of a movie using its id
@@ -109,7 +109,7 @@ def save_movie(id, rating, watch_date):
     # appends the file to save movie details
     with open('saved_movies.txt', 'a') as file:
 
-        info = [movie_data['title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, rating, movie_data['genres'][0].get('name'), movie_data['id']]
+        info = [movie_data['title'], director, movie_data['release_date'], movie_data['runtime'], watch_date, movie_data["vote_average"], movie_data['genres'][0].get('name'), movie_data['id']]
 
         # writes the information into the file
         for i in info:
