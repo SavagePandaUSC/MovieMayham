@@ -11,13 +11,18 @@ class Movie:
         self.genre = line[6]
         self.id = line[7]
 
-holder = {}
-with open('saved_movies.txt', 'r') as file:
-    lines = file.readlines()
-    for l in lines:
-        holder[l[:',']] = Movie(l)
+def make_movie_objects():
+    holder = {}
+    with open('saved_movies.txt', 'r') as file:
+        lines = file.readlines()
+        for l in lines:
+            l = l.split(',')
+            holder[l[7]] = Movie(l) #holder[l][7] is the movie's ID number
+    return holder
 
-print(holder)
+#test: 
+# make_movie_objects()
+# print(holder['13355'].title)
 
 
 """

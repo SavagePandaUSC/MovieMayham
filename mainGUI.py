@@ -4,6 +4,7 @@ from storage import search_movies, save_movie, delete, get_id
 from PIL import Image, ImageTk
 import requests
 from io import BytesIO
+from lily_movieClass import Movie, make_movie_objects
 
 # Create window
 window = tk.Tk()
@@ -126,14 +127,17 @@ clear_results_button.pack(side=tk.LEFT, padx=5)
 view_poster_button = ttk.Button(frame3, text="View Poster")
 view_poster_button.pack(side=tk.LEFT, padx=5)
 
-add_button = ttk.Button(frame3, text="Add to holding list")
+add_button = ttk.Button(frame3, text="Add to Holding list")
 add_button.pack(side=tk.LEFT, padx=5)
 
-save_button = ttk.Button(frame3, text="Save Holding movies to Watched")
+save_button = ttk.Button(frame3, text="Save Holding movies to Watched list")
 save_button.pack(side=tk.RIGHT, padx=5)
 
-remove_button = ttk.Button(frame3, text="Remove from holding list")
+remove_button = ttk.Button(frame3, text="Remove from Holding list")
 remove_button.pack(side=tk.RIGHT, padx=5)
+
+view_button = ttk.Button(frame3, text="VIEW WATCH LIST")
+view_button.pack(side=tk.RIGHT, padx=5)
 
 ## Frame 4: Page Control
 frame4 = tk.Frame(window)
@@ -150,6 +154,11 @@ prev_button.pack(side=tk.LEFT, padx=5)
 next_button = ttk.Button(frame4, text="Next")
 next_button.pack(side=tk.LEFT, padx=5)
 
+## Frame 5: the watch list screen; will appear when all previous frames are invisible
+frame5 = tk.Frame(window)
+
+go_back_button = tk.Button(frame5, text="Go back")
+go_back_button.pack()
 
 # Functions for fetching and updating results
 
@@ -288,7 +297,7 @@ def view_poster():
     label.pack()
 
 def save_list():
-    """Iterates throught throuth the holding list box and saves it to a file"""
+    """Iterates through the holding list box and saves it to a file"""
     
     movie_ids = [saved_list_ids[index] for index in range(list_listbox.size())]
 
@@ -296,8 +305,44 @@ def save_list():
         save_movie(id, "10-10-1010", "11")
     
     messagebox.showinfo("Success", "All movies in Holding updated to Saved List!")
-   
 
+# Displaying the Watch List
+
+frame5a = tk.Frame(frame5)
+frame5a.pack(fill=tk.BOTH, expand=True)
+
+tree = ttk.Treeview(frame5a)
+tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+tree_scrollbar = ttk.Scrollbar(frame5a, orient=tk.VERTICAL, command=tree.yview)
+tree_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+tree.config(yscrollcommand=tree_scrollbar.set)
+
+holder = make_movie_objects()
+for k in holder.keys():
+    parent = tree.insert("", "end", text=holder[k].title + " - " + holder[k].release_date[:4])
+    display_info = ("Director: " + holder[k].director + "\nRuntime (min): " + holder[k].runtime + "\nRating: " + holder[k].rating + "\nGenre: " + holder[k].genre)
+    tree.insert(parent, "end", text=display_info)
+   
+# Function for switching to Watch List:
+
+def view_watch_list():
+    """Makes all frames but frame5 invisible, simulating a new window"""
+    frame0.pack_forget()
+    frame1.pack_forget()
+    frame2.pack_forget()
+    frame3.pack_forget()
+    frame4.pack_forget()
+    frame5.pack()
+
+def go_back():
+    """unhides all frames but frame5, and hides frame5"""
+    frame0.pack()
+    frame1.pack()
+    frame2.pack()
+    frame3.pack()
+    frame4.pack()
+    frame5.pack_forget()
 
 # Button configurations
 clear_filters_button.configure(command=clear_filters)
@@ -309,6 +354,8 @@ add_button.configure(command=add_to_list)
 remove_button.configure(command=remove_from_list)
 save_button.configure(command=save_list)
 view_poster_button.configure(command=view_poster)
+view_button.configure(command=view_watch_list)
+go_back_button.configure(command=go_back)
 
 # Run the main loop
 window.mainloop()
