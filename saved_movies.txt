@@ -1,1 +1,4 @@
 How to Train Your Dragon,Dean DeBlois,2010-03-18,98,11,10-10-1010,Fantasy,10191,
+Batman v Superman: Dawn of Justice,Zack Snyder,2016-03-23,152,11,10-10-1010,Action,209112,
+Batman,Tim Burton,1989-06-21,126,11,10-10-1010,Fantasy,268,
+The Shining,Stanley Kubrick,1980-05-23,144,11,10-10-1010,Horror,694,

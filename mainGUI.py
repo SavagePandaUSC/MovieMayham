@@ -312,22 +312,27 @@ go_back_button.pack()
 frame5a = tk.Frame(frame5)
 frame5a.pack(fill=tk.BOTH, expand=True)
 
-tree = ttk.Treeview(frame5a)
+tree = ttk.Treeview(frame5a, selectmode='extended')
 tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 tree_scrollbar = ttk.Scrollbar(frame5a, orient=tk.VERTICAL, command=tree.yview)
 tree_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 tree.config(yscrollcommand=tree_scrollbar.set)
-
-holder = make_movie_objects()
-for k in holder.keys():
-    parent = tree.insert("", "end", text=holder[k].title + " - " + holder[k].release_date[:4])
-    display_info = ("Director: " + holder[k].director + "\nRuntime (min): " + holder[k].runtime + "\nRating: " + holder[k].rating + "\nGenre: " + holder[k].genre)
-    tree.insert(parent, "end", text=display_info)
    
 # Function for switching to Watch List:
 
 def view_watch_list():
+    """clear all items in tree first to avoid repeats"""
+    for item in tree.get_children():
+        tree.delete(item)
+
+    """refreshes to update with information on txt file"""
+    holder = make_movie_objects()
+    for k in holder.keys():
+        parent = tree.insert("", "end", text=holder[k].title + " - " + holder[k].release_date[:4])
+        display_info = ("Director: " + holder[k].director + "\nRuntime (min): " + holder[k].runtime + "\nRating: " + holder[k].rating + "\nGenre: " + holder[k].genre)
+        tree.insert(parent, "end", text=display_info)
+
     """Makes all frames but frame5 invisible, simulating a new window"""
     frame0.pack_forget()
     frame1.pack_forget()
