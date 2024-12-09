@@ -1,0 +1,3 @@
+The Batman,Matt Reeves,2022-03-01,177,7.667,Crime,414906,
+Get Out,Jordan Peele,2017-02-24,104,7.619,Mystery,419430,
+Nope,Jordan Peele,2022-07-20,130,6.8,Horror,762504,
