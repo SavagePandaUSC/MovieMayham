@@ -333,6 +333,14 @@ style.configure("Treeview", rowheight=100)
    
 # Function for switching to Watch List:
 
+def wrap_text(s,x):
+    """to use with description in the tree; will mimic text wrapping by inserting a newline every x words in a string"""
+    result = ""
+    templist = s.split()
+    for i in range(0,len(templist), x):
+        result += " ".join(templist[i:i+x]) + "\n"
+    return result
+
 def view_watch_list():
     """clear all items in tree first to avoid repeats"""
     for item in tree.get_children():
@@ -342,7 +350,7 @@ def view_watch_list():
     holder = make_movie_objects()
     for k in holder.keys():
         parent = tree.insert("", "end", text=holder[k].title + " - " + holder[k].release_date[:4])
-        display_info = ("Director: " + holder[k].director + "\nRuntime (min): " + holder[k].runtime + "\nRating: " + holder[k].rating + "\nGenre: " + holder[k].genre)
+        display_info = ("Director: " + holder[k].director + "\nRuntime (min): " + holder[k].runtime + "\nGenre: " + holder[k].genre + "\nDescription: " + wrap_text(fetch_summary(holder[k].id),30))
         tree.insert(parent, "end", text=display_info)
 
     """Makes all frames but frame5 invisible, simulating a new window"""
@@ -401,6 +409,7 @@ view_poster_button.configure(command=view_poster)
 view_button.configure(command=view_watch_list)
 go_back_button.configure(command=go_back)
 remove_watch_button.configure(command=remove_movie_from_watch_list)    
+
 # Run the main loop
 window.mainloop()
 

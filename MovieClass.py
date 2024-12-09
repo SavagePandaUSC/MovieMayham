@@ -7,9 +7,8 @@ class Movie:
         self.release_date = line[2]
         self.runtime = line[3]
         self.watch_date = line[4]
-        self.rating = line[5]
-        self.genre = line[6]
-        self.id = line[7]
+        self.genre = line[5]
+        self.id = line[6]
     def remove_movie(self):
         """Removes this movie from the saved_movies.txt file based on its ID."""
         file_path='saved_movies.txt'
@@ -34,7 +33,7 @@ def make_movie_objects():
         lines = file.readlines()
         for l in lines:
             l = l.split(',')
-            holder[l[7]] = Movie(l) #holder[l][7] is the movie's ID number
+            holder[l[6]] = Movie(l) #holder[l][7] is the movie's ID number
     return holder
 
 #test: 

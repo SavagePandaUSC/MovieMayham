@@ -144,7 +144,6 @@ def fetch_summary(id):
 
     return data['overview']
 
-
 if __name__ == "__main__":
    
    data = search_movies(
