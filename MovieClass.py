@@ -17,7 +17,7 @@ class Movie:
                 lines = file.readlines()
             
             # Filter out the line with the matching movie ID
-            updated_lines = [line for line in lines if line.split(',')[7].strip() != self.id]
+            updated_lines = [line for line in lines if line.split(',')[6].strip() != self.id]
 
             with open(file_path, 'w') as file:
                 file.writelines(updated_lines)
